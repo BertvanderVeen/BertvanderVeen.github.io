@@ -34,25 +34,25 @@ library(gllvm)
 load("mod.RData")
 ```
 
-This is some documentation of the presentation I gave at the Center for Biodiversity Dynamids (CBD) on 04-02-2020, on the use of the [gllvm](Niku et al. 2019) package to fit Joint Species Distribution Models (JSDMs) in R. My goal is not to ecologically interpret the results, for this see the publication by Damaris Zurell. Here, I intend to give a short overview of the functionality available in the \textit{gllvm} package, as it provides a easy-to-use interface to fast estimation for JSDMs.
+This is some documentation of the presentation I gave at the Center for Biodiversity Dynamids (CBD) on 04-02-2020, on the use of the [gllvm](Niku et al. 2019) package to fit Joint Species Distribution Models (JSDMs) in R. My goal is not to ecologically interpret the results, for this see the publication by Damaris Zurell. Here, I intend to give a short overview of the functionality available in the *gllvm* package, as it provides a easy-to-use interface to fast estimation for JSDMs.
 
 The example presented below was first worked out by Damaris Zurell [see SDM-intro](https://damariszurell.github.io/SDM-Intro/), see also [Zurell et al. 2019: Testing species assemblage predictions from stacked and joint species distribution models](https://onlinelibrary.wiley.com/doi/full/10.1111/jbi.13608) whose work I built on here.
 
 Feel free to contact me at [bert.vanderveen@nibio.no](mailto:bert.vanderveen@nibio.no) or [@vdVeenB](https://twitter.com/vdVeenB) if you have any questions.
 
 # Species distributions and niches
-The \textit{current biotope} and \textit{future biotope} in figure one represent the available environment in the wide, wide world.
+The *current biotope* and *future biotope* in figure 1) represent the available environment in the wide, wide world.
 
 Species have a fundamental niche that represents the space it can theoretically occur at, which is a subspace of the available environment. All space outside of the fundamental niche is unsuited for a species to occur at. The realized niche is a subspace of the fundamental niche, which represents the space a species occurs at in practice. This is different from the fundamental niche due to e.g. the colonisation history and dispersal abilities of species, and the effects if species interactions.
 
-Figure one nicely represents our general goal when fitting distributions models: estimating the niche of species in the light of environmental change (in space and/or time).
+Figure 1) nicely represents our general goal when fitting distributions models: estimating the niche of species in the light of environmental change (in space and/or time).
 
 ```{r, fig.width=5, fig.cap="Fig. 1: Fletcher and Fortin 2019"}
 knitr::include_graphics("vann.png")
 ```
 
 ## Joint responses
-Figure one represents a single species scenario. The axes, though dubbed "environmental variable", also represent interactions with other species, as it affects a species' tolerance to the environment. In the case of quadratic niches (alternatively one might consider them skewed), figure two and three demonstrate potential impacts of environmental change on species occurrences.
+Figure 1) represents a single species scenario. The axes, though dubbed "environmental variable", also represent interactions with other species, as it affects a species' tolerance to the environment. In the case of quadratic niches, figure 2) and 3) demonstrate potential impacts of environmental change on species occurrences.
 
 ```{r, warning=F, message = F, fig.width=5, fig.height=3, fig.cap="Fig. 2: Species are often assumed to exhibit quadratic responses on the environment"}
 par(mar = c(2,2,0,0))
@@ -105,18 +105,18 @@ The log-likelihood is given by the equation:
  * $\Theta$ all parameters
  * $y_{ij}$ matrix of data (n sites by p species)
  * $\boldsymbol{z}_i$ latent variables (missing covariate, random-effect, ordination axis)
- * Essentialy a multivariate mixed-effects model [(Warton et al. 2015)](https://www.sciencedirect.com/science/article/pii/S0169534715002402?via%3Dihub)
+ * A multivariate mixed-effects model [(Warton et al. 2015)](https://www.sciencedirect.com/science/article/pii/S0169534715002402?via%3Dihub)
 
 Fitting GLLVMs can be computationally intensive due to the presence of latent variables. Various Bayesian frameworks are available in R to fit this type of model using Markov-Chain Montecarlo (MCMC) techniques, e.g. [JAGS](http://mcmc-jags.sourceforge.net/), [STAN](https://mc-stan.org/rstan/), [NIMBLE](https://r-nimble.org/) or [greta](https://greta-stats.org/) can be used as well as the Hierarchical Modelling of Species Communities [HMSC](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.13345) package.
 
-However, MCMC can be take a long time to converge. As a fast alternative, Niku et al. (2019) have developed an approach in frequentist statistics, based on approximation of the marginal GLLVM likelihood. The approach is subject to local optima in the likelihood, thus the starting values (specifically for the latent variables) have to be carefully considered [(Niku et al. 2019)](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.13303). 
+However, MCMC can take a long time to converge. As a fast alternative, Niku et al. (2019) have developed an approach in frequentist statistics, based on approximation of the marginal GLLVM likelihood. The approach is subject to local optima in the likelihood, thus the starting values (specifically for the latent variables) have to be carefully considered [(Niku et al. 2019)](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.13303). 
 
 # Fast analysis of multivariate abundance data
-GLLVMs fit with either the Laplace approximation (LA) or Variational approximation (VA) are a fast alternative to fitting JSDMs wth MCMC. Niku et al. (2019) mentions an example in which they experienced a 150x speed-up compared to the \textit{boral} package which utilizes JAGS.
+GLLVMs fit with either the Laplace approximation (LA) or Variational approximation (VA) are a fast alternative to fitting JSDMs wth MCMC. Niku et al. (2019) mentions an example in which they experienced a 150x speed-up compared to the *boral* package which utilizes JAGS.
 
 ![](fastanalysis.png)
 
-The approach from Niku et al. (2019) is implemented in the \textit{gllvm} package, for which I will demonstrate the use below.
+The approach from Niku et al. (2019) is implemented in the *gllvm* package, for which I will demonstrate the use below.
 
 * Variational approximation: [Hui et al. 2017](https://www.tandfonline.com/doi/abs/10.1080/10618600.2016.1164708); van der Veen et al. in prep
   + Pro: very fast
@@ -127,18 +127,18 @@ The approach from Niku et al. (2019) is implemented in the \textit{gllvm} packag
 * Approximate methods are affected by local optima in the likelihood
 
 ## Computational voodoo by Template model builder
-\textit{Kristensen, K., Nielsen, A., Berg, C.W., Skaug, H., Bell, B. (2016) TMB: Automatic Differentiation and Laplace Approximation}
+*Kristensen, K., Nielsen, A., Berg, C.W., Skaug, H., Bell, B. (2016) TMB: Automatic Differentiation and Laplace Approximation*
 
 The package uses Template Model Builder [(TMB)](https://kaskr.github.io/adcomp/Introduction.html) for the computational implementation. TMB is a convenient framework to automatically apply the laplace approximation and/or automatic differentiation of likelihood functions coded in C++. It allows to peform completely parallelizable optimization, which is still difficult with MCMC (though see parallel bugs). It combines very well with Variational Approximation.
 
-* TMB is aperforms automatic differentiation and laplace approximation
+* TMB is an R-package to perform automatic differentiation and laplace approximation
 * Supports a range of probability distributions and model types
 * Optimization is performed in R (in parallel)
 * It does require coding the likelihood in C++
 
 ## Current functionality
 
-Most of the functions currently available in the \textit{gllvm} package.
+Most of the functions currently available in the *gllvm* package;
 
 - [gllvm](https://www.rdocumentation.org/packages/gllvm/versions/1.2.1): main function to run a model
 - [anova](https://www.rdocumentation.org/packages/gllvm/versions/1.2.1/topics/anova.gllvm): analysis of variance for multiple models
@@ -179,7 +179,7 @@ mod <- gllvm(formula=Y~X+I(X^2),
              sd.errors = F)
 ```
 
-After running the model, one should check residual plots. Since deviance/ pearson residuals cannot necessarily be expected to be normally distributed for latent effects models (so including GLMMs), the package provides randomized quantile residuals [(Dunn and Smyth 1996)](https://www.jstor.org/stable/1390802?seq=1). As in residual plots for linear models, look for any patterns and outliers. The plots in figure five look good. If residual plots don't look well:
+After running the model, one should check residual plots. Since deviance/ pearson residuals cannot necessarily be expected to be normally distributed for latent effects models (so including GLMMs), the package provides randomized quantile residuals [(Dunn and Smyth 1996)](https://www.jstor.org/stable/1390802?seq=1). As in residual plots for linear models, look for any patterns and outliers. The plots in figure 5) look good. If residual plots don't look well:
 
 1) Change probability distribution if not appropriate
 2) Diagnose (and potentially exclude) outliers
@@ -237,7 +237,7 @@ corrplot(getResidualCor(mod),type="lower",method="color",order="FPC")
 
 For users that are more interested in the ordination perspective, rather than the JSDM perspective on these models, the package offers the <code>ordiplot</code> function, which constructs biplots of the site scores and species scores. Unlike in classical ordination, this function offers the possibility to visualize prediction regions for the site scores.
 
-```{r, fig.cap="Fig. 8: Biplot of latent effect for the Swiss forest bird example"}
+```{r, fig.cap="Fig. 8: Biplot of latent effect for the Swiss forest bird example. Grey numbers indicate site scores."}
 gllvm::ordiplot(mod,s.colors = "lightgrey",biplot=T)
 ```
 
@@ -253,7 +253,7 @@ tab<-kable(matrix(sort(gsub("_"," ", colnames(Y))),ncol=4))
 #kable_styling(tab,font_size = 5)
 ```
 
-Though the best model in the original publication included five covariates, I've decided to only include three here.
+Though the best model in the original publication included five covariates, I've decided to only include three covariates here, to produce a more simple example.
 
 ```{r, include=F}
 X <- avi_dat[,57:ncol(avi_dat)]
@@ -332,18 +332,18 @@ names(bio_curr) <- c("bio_2","bio_5","bio_14")
 
 ## The model
 
-The \textit{gllvm} package currently only fits models with linear latent variables, and exclusively spatial, so our linear predictor is:
+The *gllvm* package currently only fits models with linear latent variables, and exclusively spatial, so our linear predictor is:
 
 $\eta_{ij} = \beta_{0j} + \boldsymbol{X}_i^\top \boldsymbol{\beta}_j + \boldsymbol{z}_i^\top \boldsymbol{u}_j$
 
 
 Above, $\beta_{0j}$ is a species-specific intercept, $\boldsymbol{X}_i^\top$ the site-specific covariates with species-specific effects $\boldsymbol{\beta}_j$, and latent variable (a.k.a. site scores) $\boldsymbol{z}_i^\top$ with species-specific responses $\boldsymbol{u}_j$ (a.k.a. species scores). 
 
-The third term accounts for species co-occurrences, here I included two latent variables. Note that the optima number of latent variables differs per dataset, and more might be necessary to properly account for correlations between species.
+The third term accounts for species co-occurrences, here I included two latent variables. Note that the optimal number of latent variables differs per dataset, and more might be necessary to properly account for correlations between species.
 
-Figure seven is a plot of the residual correlation matrix. Species that have values in between -1 and with another species, are predicted to negatively co-occur (i.e. avoid each other). Species that have values in between 0 and 1 are predicted to co-occur. Here, the figure shows few positive residual correlations, and only one species has negative residual correlations with other species. As such, a stacked SDM can be expected to perform similarly for this example, as was the conclusion in Zurell et al. (2019). 
+Figure 7) is a plot of the residual correlation matrix. Species that negative values with another species, are predicted to avoid each other. Species that have positive values are predicted to co-occur. Here, the figure shows few positive residual correlations, and only one species has negative residual correlations with other species. As such, a stacked SDM can be expected to perform similarly for this example, as was the conclusion in Zurell et al. (2019). 
 
-Often, presence-absence data doesn't contain much information, so in my experience there is often only sufficient support for a low number of latent variables (especially when covariates are included). I did fit the model with with five latent variables (as in Zurell et al. (2019)), which did not seem to perform considerably better than the model with two latent variables. Additionally, it significantly increases computation time and calculation of standard errors might fail in case of a singular fit (if more latent variables are included than supported by the data we are overfitting). In practice, one can use information criteria to select the optimal number of latent variables.
+Often, presence-absence data doesn't contain much information compared to abundance data, so there is often only sufficient support for a low number of latent variables (especially when covariates are included). I did fit the model with with five latent variables (as in Zurell et al. (2019)), which did not seem to perform considerably better than the model with two latent variables. Additionally, it significantly increases computation time and calculation of standard errors might fail in case of a singular fit (if more latent variables are included than supported by the data we are overfitting). In practice, one can use information criteria to select the optimal number of latent variables.
 
 The variance-covariance matrix of the latent variable is calculated as $\Sigma = \boldsymbol{u}_j^\top \boldsymbol{u}_j$ and the residual correlation matrix (species association matrix) as $\frac{1}{\sqrt(\text{diag}(\Sigma))} \Sigma \frac{1}{\sqrt(\text{diag}(\Sigma))}$, i.e. the normalized covariance matrix.
 
@@ -351,7 +351,7 @@ This model, with the example dataset, took around 20 minutes to run on 1 CPU. No
 
 ## Preparing maps
 
-The code below serves to download world climate data, as well as a climate scenario. These I will use for fitting the model and for the prediction of future species distributions.
+The code below serves to download world climate data, as well as a climate scenario. These coovariates I will use for fitting the model and for the prediction of future species distributions.
 
 ```{r,echo=T, eval=F, size="tiny"}
 library(raster)
@@ -373,7 +373,7 @@ bg <- raster('/vsicurl/https://damariszurell.github.io/
 ```
 
 Do note that for both maps below the prediction intervals were ommitted as it would result a total of 336 maps (three per prediction per species). However, in a publication these should always be considered before drawing inference.
-They were made using the plotting function from the \textit{raster} package.
+They were made using the plotting function from the *raster* package.
 
 ## Predicted current state (16 spp)
 
@@ -399,6 +399,8 @@ knitr::include_graphics("Ring_ouzel.jpg")
 ```
 
 ## Ring ouzel comparison
+Below, in figure 13), maps are preoduced with predictions from a GLLVM (top) and GLM (below), which clearly differ.
+
 ```{r, fig.show="hold",out.width="45%", fig.cap="Fig. 13: Ring ouzel current and future prediction comparison from a GLLVM and GLM"}
 ro_curr <- r_pred_curr[[38]]
 names(ro_curr) <- "Current GLLVM"

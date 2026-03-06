@@ -211,6 +211,7 @@ exclude:
   - _pages/profiles.md
   - _pages/blog.md
   - _pages/dropdown.md
+  - _posts
 keep_files:
   - CNAME
   - .nojekyll

@@ -1,6 +1,6 @@
 cv:
   name: Bert van der Veen
-  label: Researcher
+  # label: Researcher
   email: bert.van-der-veen@uni-bayreuth.de
   location: Bayreuth, Germany
   image: ""

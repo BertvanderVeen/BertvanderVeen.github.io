@@ -35,7 +35,7 @@ In my view, multivariate mixed-effects models, and particularly **Generalised Li
 
 While ordination is an important analytical tool for sparse data, my interests increasingly extend to **biodiversity estimation and forecasting**, particularly how these statistical model can be used to better understand and predict biodiversity dynamics.
 
-Ultimately, I am interested in contributing to a gradual **shift toward model-based approached in coommunity ecology**, spanning ordination, diversity estimation, clustering, and related analytical techniques.
+Ultimately, I am interested in contributing to a gradual **shift toward model-based approached in community ecology**, spanning ordination, diversity estimation, clustering, and related analytical techniques.
 
 # Research interests
 

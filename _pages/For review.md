@@ -2,7 +2,8 @@
 layout: about
 title: For review requests
 permalink: /review/
-subtitle: 
+nav: true
+nav_order: 4
 
 selected_papers: false # includes a list of papers marked as "selected={true}"
 social: true # includes social icons at the bottom of the page

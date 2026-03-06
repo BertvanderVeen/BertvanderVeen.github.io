@@ -30,11 +30,46 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/cv/";
           },
-        },{id: "projects-britisch-ecological-society-2020",
-          title: 'Britisch Ecological Society 2020',
+        },{id: "projects-university-of-antwerp-2023",
+          title: 'University of Antwerp 2023',
+          description: "",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/Antwerp/";
+            },},{id: "projects-bes-39-festival-of-ecology-2020",
+          title: 'BES&amp;#39; Festival of Ecology 2020',
           description: "",
           section: "Projects",handler: () => {
               window.location.href = "/projects/BES2020/";
+            },},{id: "projects-generalised-linear-latent-variable-models-with-physalia",
+          title: 'Generalised Linear Latent Variable Models with Physalia',
+          description: "",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/GLLVMsPhy/";
+            },},{id: "projects-generalised-linear-models-with-physalia",
+          title: 'Generalised Linear Models with Physalia',
+          description: "",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/GLMsPhy/";
+            },},{id: "projects-international-research-school-in-applied-ecology-2021",
+          title: 'International Research School in Applied Ecology 2021',
+          description: "",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/IRSAE2024/";
+            },},{id: "projects-norwegian-oikos-2025",
+          title: 'Norwegian Oikos 2025',
+          description: "",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/NOF2025/";
+            },},{id: "projects-summer-school-in-model-based-multivariate-analysis-for-ecologists",
+          title: 'Summer School in Model-based multivariate analysis for ecologists',
+          description: "",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/SSMA/";
+            },},{id: "projects-uppsala-university-2024",
+          title: 'Uppsala University 2024',
+          description: "",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/Uppsala/";
             },},{
       id: 'light-theme',
       title: 'Change theme to light',

@@ -25,10 +25,26 @@ latest_posts:
   limit: 3 # leave blank to include all the blog posts
 ---
 
-I am  a postdoctoral researcher in Statistical Ecology at the University of Bayreuth, Germany. My research focuses on the development of multivariate statistical models, specifically those focused on data of ecological communities. This includes a wide variety of topics, such as easy-to-use software implementations, occasionally computational statistics, aligning statistical models with the ecological processes under study, and generally helping ecologists to make most out of their (multivariate) data. I have a special fondness for ordination, though less so for the ordination methods that are traditionally used in ecology.
-My research focuses on the application of dimension reduction techniques for datasets on ecological communities. Dimension reduction techniques for multivariate data are referred to as "ordination" in ecology.
+I am  a postdoctoral researcher in *Statistical Ecology* at the University of Bayreuth, Germany. My research focuses on the development of multivariate statistical models for ecological communities. Much of my work revolves around translating modern statistical methodology into toosl that ecologists can use, including software development, computational methods, and improving the alignment of statistical models and ecological processes.
 
-Generally speaking, I think ecological processes and analytical tools are poorly aligned in community ecology. There has been a rapid advancement of analytical tools for community ecology, but classical multivariate methods, non-parametric estimators of diversity, and general ad-hoc use of statistical methods is still day-to-day business. One of the driving motivations of my work, is the  wish to see statistics better aligned with ecology. Personally, I think multivariate mixed-effects models (such as Generalised Linear Latent Variable Models are), are the way to go, as they have that ability of aligning much more close to the ecological process. Often, I get the remark that perhaps there simply haven't been enough publications proving that contemporary methods have better performance, flexibility, and ecological alignment. That is not true: there are plenty of papers that have established the need to move away from traditional analytical tools (ask me about it).
+A central theme in my research is *dimension reduction for multivariate  ecological data*, which in ecology is referred to as *ordination*. I have a particular interest in ordination methods, although not so much in the classical techniques that have traditionally dominated the field.
 
-Particularly, classical ordination techniques such as PCA, CA, or NMDS have various caveats, so in order to improve the ordination of ecological communities, we work on the development, application, and usability, of model-based ordination. For my research, that is mostly in the context of the [gllvm R-package](https://github.com/JenniNiku/gllvm). Community ecology is more than ordination, however, although ordination is an incredibly important tool to analyse sparse data on ecological communities effectively. More, and more, diversity estimation has become an interest for me, so that nowadays I spend quite some time thinking how statistical models can be effectively used to forecast biodiversity dynamics.
+More broadly, I think the analytical tools used in community ecology are often poorly aligned with the ecological processes being studied. While statistical methodology has advanced rapidly, classical multivariate techniques, non-parametric estimators of diversity, and ad-hoc analytical workflows are still widely used. One of the main motivations behind my work, is to help bring statistical practice in community ecology closer to modern statistical modeling.
 
+In my view, multivariate mixed-effects models, and particularly *Generalised Linear Latent Variable Models* (GLLVMs), provide an encompassing framework for community ecology, because of their ability to more closely reflect ecological processes, while still facilitating analysis of everyday community ecological datasets. Much of my research therefore focuses on model-based ordination, including methodological development, practical applicatiions, and improvements in usability, often in connection with the [gllvm R-package](https://github.com/JenniNiku/gllvm). 
+
+While ordination is an important analytical tool for sparse data, my interests increasingly extend to *biodiversity estimation and forecasting*, particularly how these statistical model can be used to better understand and predict biodiversity dynamics.
+
+Ultimately, I am interested in contributing to a gradual *shift toward model-based approached in coommunity ecology*, spanning ordination, diversity estimation, clustering, and related analytical techniques.
+
+# Research interests
+
+My professional interests include:
+- *Model-based ordination* using Generalised Linear Latent Variable Models
+- *Joint Species Distribution Models*, insofar they overlap with model-based ordination
+- *Approximate likelihood methods*, especially Variational Approximations
+- *Computational statistics and scalable inference* - making sure statistical models run before I've brewed my coffee (*Life is too short for MCMC*)
+- *Numerical optimisation for statistical models* (Only a little; it's difficult to avoid)
+- *Best practice-statistical analysis*, ensuring assumptions are realistic and coherent
+- *Statistical methods for everyday ecological datasets*
+- *Community ecology*

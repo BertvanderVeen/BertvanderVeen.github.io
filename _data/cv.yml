@@ -7,13 +7,15 @@ cv:
 
   social_networks:
     - network: Bluesky
-      username: vdVeenB
+      username: vdveenb.bsky.social
     - network: GitHub
       username: BertvanderVeen
     - network: LinkedIn
       username: bert-van-der-veen-b143a64b
-    - network: Goolescholar
+    - network: Goole Scholar
       username: uu2z7LAAAAAJ
+    - network: ORCID
+    - username: 0000-0003-2263-3880
 
   sections:
     Education:

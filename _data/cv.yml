@@ -12,7 +12,7 @@ cv:
       username: BertvanderVeen
     - network: LinkedIn
       username: bert-van-der-veen-b143a64b
-    - network: GooleScholar
+    - network: Goolescholar
       username: uu2z7LAAAAAJ
 
   sections:
@@ -29,7 +29,7 @@ cv:
 
       - institution: Inland Norway University
         location: Evenstad, Norway
-        area: Appied Ecology
+        area: Applied Ecology
         studyType: Master of Science
         start_date: 2015
         end_date: 2017
@@ -48,7 +48,7 @@ cv:
         position: Akademischer Rat auf Zeit
         location: Bayreuth, Germany
         start_date: 2025
-        end_date: -
+        end_date: null
         highlights:
           - Chair of Plant ecology
 
@@ -75,12 +75,6 @@ cv:
         end_date: 2021
         highlights:
           - Department of Landscape and Biodiversity
-
-      - company: Karl-Ferdinand University
-        position: Professor of Theoretical Physics
-        location: Prague, Czechoslovakia
-        start_date: 1911
-        end_date: 1917
 
       - company: LBPSight
         position: Junior consultant forestry and nature management

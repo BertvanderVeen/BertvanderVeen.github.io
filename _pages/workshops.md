@@ -4,7 +4,7 @@ title: Past workshops
 permalink: /workshops/
 nav: true
 nav_order: 3
-display_categories: [workhops]
+display_categories: [workshops]
 horizontal: false
 ---
 

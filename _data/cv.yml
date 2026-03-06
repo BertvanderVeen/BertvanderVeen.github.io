@@ -25,7 +25,8 @@ cv:
         start_date: 2018
         end_date: 2022
         highlights:
-          - [Multivariate statistical models for community ecology](https://nva.sikt.no/registration/0198ebf91c1f-166f916a-d036-4eb9-871e-30ae6798f104)
+          - Multivariate statistical models for community ecology
+          - https://nva.sikt.no/registration/0198ebf91c1f-166f916a-d036-4eb9-871e-30ae6798f104
 
       - institution: Inland Norway University
         location: Evenstad (NO)
@@ -34,7 +35,8 @@ cv:
         start_date: 2015
         end_date: 2017
         highlights:
-          - [Wolverine Food Hoarding behavior](https://link.springer.com/article/10.1007/s00265-020-2823-4)
+          - Wolverine Food Hoarding behavior
+          - https://link.springer.com/article/10.1007/s00265-020-2823-4
           
       - institution: Van Hall - Larenstein University of Applied Sciences
         location: Velp (NL)

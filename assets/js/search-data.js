@@ -55,6 +55,11 @@ ninja.data = [{
           description: "",
           section: "Projects",handler: () => {
               window.location.href = "/projects/GLMsPhy/";
+            },},{id: "projects-generalised-linear-latent-variable-models-with-physalia",
+          title: 'Generalised Linear Latent Variable Models with Physalia',
+          description: "",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/GLLVMsPhy/";
             },},{id: "projects-norwegian-oikos-2025",
           title: 'Norwegian Oikos 2025',
           description: "",
@@ -65,11 +70,6 @@ ninja.data = [{
           description: "",
           section: "Projects",handler: () => {
               window.location.href = "/projects/SSMA/";
-            },},{id: "projects-generalised-linear-latent-variable-models-with-physalia",
-          title: 'Generalised Linear Latent Variable Models with Physalia',
-          description: "",
-          section: "Projects",handler: () => {
-              window.location.href = "/projects/GLLVMsPhy/";
             },},{
       id: 'light-theme',
       title: 'Change theme to light',

@@ -209,7 +209,6 @@ exclude:
   - _pages/teaching.md
   - _pages/news.md
   - _pages/profiles.md
-  - _pages/cv.md
   - _pages/blog.md
   - _pages/dropdown.md
 keep_files:

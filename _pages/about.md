@@ -2,7 +2,7 @@
 layout: about
 title: about
 permalink: /
-subtitle: <a href='#'>Affiliations</a>. Address. Contacts. Motto. Etc.
+subtitle: <a href='#'>Affiliations</a>. University of Bayreuth
 
 profile:
   align: right
@@ -27,8 +27,8 @@ latest_posts:
   limit: 3 # leave blank to include all the blog posts
 ---
 
-Write your biography here. Tell the world about yourself. Link to your favorite [subreddit](https://www.reddit.com). You can put a picture in, too. The code is already in, just name your picture `prof_pic.jpg` and put it in the `img/` folder.
+My research focuses on the application of dimiension reduction techniques for datasets on ecological communities. Dimension reduction techniques for multivariate data are referred to as "ordination" in ecology.
 
-Put your address / P.O. box / other info right below your picture. You can also disable any of these elements by editing `profile` property of the YAML header of your `_pages/about.md`. Edit `_bibliography/papers.bib` and Jekyll will render your [publications page](/al-folio/publications/) automatically.
+Classical ordination techniques such as PCA, CA, or NMDS have various caveats, so in order to improve the ordination of ecological communities, we work on the development, application, and useability, of model-based ordination. For my research, that is mostly in the context of the gllvm R-package.
 
-Link to your social media connections, too. This theme is set up to use [Font Awesome icons](https://fontawesome.com/) and [Academicons](https://jpswalsh.github.io/academicons/), like the ones below. Add your Facebook, Twitter, LinkedIn, Google Scholar, or just disable all of them.
+I am  a postdoctoral researcher in Statistical Ecology at the University of Bayreuth, Germany. My research focuses on the development of multivariate statistical models, specifically those focused on data of ecological communities. This includes a wide variety of topics, such as easy-to-use software implementations, occasionally computational statistics, aligning statistical models with the ecological processes under study, and generally helping ecologists to make most out of their (multivariate) data. I have a special fondness for ordination, though less so for the ordination methods that are traditionally used in ecology.

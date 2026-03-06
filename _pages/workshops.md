@@ -1,8 +1,8 @@
 ---
 layout: page
-title: workshops
+title: Past workshops
 permalink: /workshops/
-description: A growing collection of your cool projects.
+description: A collection of workshops I have organised in the past.
 nav: true
 nav_order: 3
 display_categories: [workshops]

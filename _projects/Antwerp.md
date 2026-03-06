@@ -3,7 +3,7 @@ layout: page
 title: University of Antwerp 2023
 importance: 1
 category: workshops
-date: 2023
+date: 10-11-2023
 ---
 
 # Demonstration of the gllvm R-package (digital)

@@ -4,7 +4,7 @@ title: Summer School in Model-based multivariate analysis for ecologists
 importance: 1
 category: workshops
 img: assets/img/SSMA.jpeg
-date: 2025
+date: 20-07-2025
 ---
 
 ## Summer School in Model-based multivariate analysis for ecologists

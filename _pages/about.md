@@ -43,7 +43,7 @@ My professional interests include:
 - **Model-based ordination** using Generalised Linear Latent Variable Models
 - **Joint Species Distribution Models**, insofar they overlap with model-based ordination
 - **Approximate likelihood methods**, especially Variational Approximations
-- **Computational statistics and scalable inference** - making sure statistical models run before I've brewed my coffee (*Life is too short for MCMC*)
+- **Computational statistics and scalable inference** - models must run before I've brewed my coffee (*Life is too short for MCMC*)
 - **Numerical optimisation for statistical models** (Only a little; it's difficult to avoid)
 - **Best practice-statistical analysis**, ensuring assumptions are realistic and coherent
 - **Statistical methods for everyday ecological datasets**

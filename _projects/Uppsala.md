@@ -3,7 +3,6 @@ layout: page
 title: Uppsala University 2024
 importance: 1
 category: workshops
-img: assets/img/BES2020.png
 date: 26-04-2024
 ---
 

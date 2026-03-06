@@ -48,3 +48,7 @@ My professional interests include:
 - **Best practice-statistical analysis**, ensuring assumptions are realistic and coherent
 - **Statistical methods for everyday ecological datasets**
 - **Community ecology**
+
+# Publications
+
+Please have a look at my [google scholar profile](https://scholar.google.com/citations?user=uu2z7LAAAAAJ&hl=en&oi=ao).

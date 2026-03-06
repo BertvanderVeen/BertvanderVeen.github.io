@@ -4,6 +4,7 @@ title: Uppsala University 2024
 importance: 1
 category: workshops
 img: assets/img/BES2020.png
+date: 2024
 ---
 
 # Model-based ordination with the gllvm R-package

@@ -4,6 +4,7 @@ title: Generalised Linear Latent Variable Models with Physalia
 importance: 1
 category: workshops
 img: assets/img/GLLVMs.png
+date: 2025
 ---
 
 # GLLVMs: Advanced multivariate analysis of ecological communities in R

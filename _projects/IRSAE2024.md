@@ -4,6 +4,7 @@ title: International Research School in Applied Ecology 2021
 importance: 1
 category: workshops
 img: assets/img/IRSAE.png
+date: 2024
 ---
 
 # Analysing multivariate ecological data with Generalized Linear Latent Variable Models

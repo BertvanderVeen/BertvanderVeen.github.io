@@ -4,6 +4,7 @@ title: Generalised Linear Models with Physalia
 importance: 1
 category: workshops
 img: assets/img/GLMs.png
+date: 2025
 ---
 
 # Generalised Linear Models as a unified framework for data analysis in R

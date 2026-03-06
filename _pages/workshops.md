@@ -1,18 +1,34 @@
 ---
-layout: default
+layout: page
 title: Past workshops
 permalink: /workshops/
 nav: true
 nav_order: 3
+display_categories: [workshops]
+horizontal:false
 ---
-
-{% assign workshop_items = site.workshops | sort: 'date' | reverse %}
-
-{% for item in workshop_items %}
-  <h3>{{ item.title }}</h3>
-  <p>{{ item.content }}</p>
-{% endfor %}
-
-{% if item.category == 'workshop' %}
-  <span class="badge">{{ item.category }}</span>
-{% endif %}
+<!-- pages/workshops.md -->
+<div class="workshops">
+{%- if site.enable_project_categories and page.display_categories %}
+  <!-- Display categorized workshops -->
+  {%- for category in page.display_categories %}
+  <h2 class="category">{{ category }}</h2>
+  {%- assign categorized_workshops = site.workshops | where: "category", category -%}
+  {%- assign sorted_workshops = categorized_workshops | sort: "importance" %}
+  <!-- Generate cards for each project -->
+  {% if page.horizontal -%}
+  <div class="container">
+    <div class="row row-cols-2">
+    {%- for project in sorted_workshops -%}
+      {% include workshops_horizontal.html %}
+    {%- endfor %}
+    </div>
+  </div>
+  {%- else -%}
+  <div class="grid">
+    {%- for project in sorted_workshops -%}
+      {% include workshops.html %}
+    {%- endfor %}
+  </div>
+  {%- endif -%}
+  {% endfor %}

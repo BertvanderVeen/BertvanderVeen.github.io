@@ -204,7 +204,6 @@ exclude:
   - _pages/profiles.md
   - _pages/blog.md
   - _pages/dropdown.md
-  - _posts
 keep_files:
   - CNAME
   - .nojekyll
@@ -280,8 +279,8 @@ display_categories: ["external-services"] # these categories will be displayed o
 # -----------------------------------------------------------------------------
 
 scholar:
-  last_name: [Einstein]
-  first_name: [Albert, A.]
+  last_name: [van der Veen]
+  first_name: [Bert]
 
   style: apa
   locale: en

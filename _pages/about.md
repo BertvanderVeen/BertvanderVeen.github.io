@@ -25,7 +25,7 @@ latest_posts:
   limit: 3 # leave blank to include all the blog posts
 ---
 
-I am  a postdoctoral researcher in **Statistical Ecology** at the University of Bayreuth, Germany. My research focuses on the development of multivariate statistical models for ecological communities. Much of my work revolves around translating modern statistical methodology into tools that ecologists can use, including software development, computational methods, and improving the alignment of statistical models and ecological processes.
+I am  a postdoctoral researcher in **Statistical Ecology** *(or ecological statistics)* at the University of Bayreuth, Germany. My research focuses on the development of multivariate statistical models for ecological communities. Much of my work revolves around translating modern statistical methodology into tools that ecologists can use, including software development, computational methods, and improving the alignment of statistical models and ecological processes.
 
 A central theme in my research is **dimension reduction for multivariate  ecological data**, which in ecology is referred to as **ordination**. I have a particular interest in ordination methods, although not so much in the classical techniques that have traditionally dominated the field.
 

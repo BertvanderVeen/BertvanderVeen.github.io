@@ -18,7 +18,7 @@ cv:
   sections:
     Education:
       - institution: Norwegian University of Science and Technology
-        location: Trondheim, Norway
+        location: Trondheim (NO)
         url: https://www.ntnu.no/
         area: Mathematical Sciences
         studyType: PhD
@@ -28,7 +28,7 @@ cv:
           - Multivariate statistical models for community ecology
 
       - institution: Inland Norway University
-        location: Evenstad, Norway
+        location: Evenstad (NO)
         area: Applied Ecology
         studyType: Master of Science
         start_date: 2015
@@ -37,7 +37,7 @@ cv:
           - Wolverine Food Hoarding behavior
           
       - institution: Van Hall - Larenstein University of Applied Sciences
-        location: Velp, the Netherlands
+        location: Velp (NL)
         area: Forestry and Nature management
         studyType: Bachelor of Science
         start_date: 2009
@@ -46,7 +46,7 @@ cv:
     Experience:
       - company: University of Bayreuth
         position: Akademischer Rat auf Zeit
-        location: Bayreuth, Germany
+        location: Bayreuth (DE)
         start_date: 2025
         end_date: null
         highlights:
@@ -54,7 +54,7 @@ cv:
 
       - company: Norwegian University of Science and Technology
         position: Postdoctoral Researcher
-        location: Trondheim, Norway
+        location: Trondheim  (NO)
         start_date: 2022
         end_date: 2025
         highlights:
@@ -62,7 +62,7 @@ cv:
           
       - company: Norwegian University of Science and Technology
         position: Postdoctoral Researcher
-        location: Trondheim, Norway
+        location: Trondheim (NO)
         start_date: 2022
         end_date: 2022
         highlights:
@@ -70,7 +70,7 @@ cv:
           
       - company: Norwegian Institute for Bioeconomy Research
         position: PhD Candidate
-        location: Trondheim, Norway
+        location: Trondheim (NO)
         start_date: 2017
         end_date: 2021
         highlights:
@@ -78,6 +78,6 @@ cv:
 
       - company: LBPSight
         position: Junior consultant forestry and nature management
-        location: Nieuwegein, the Netherlands
+        location: Nieuwegein (NL)
         start_date: 2014
         end_date: 2015

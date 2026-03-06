@@ -1,7 +1,7 @@
 ---
 layout: about
 title: For review requests
-permalink: /
+permalink: /review/
 subtitle: 
 
 selected_papers: false # includes a list of papers marked as "selected={true}"

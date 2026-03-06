@@ -154,7 +154,7 @@ newsletter:
 
 collections:
   workshops:
-    output: false
+    output: true
     permalink: /workshops/:path/
 
 # -----------------------------------------------------------------------------

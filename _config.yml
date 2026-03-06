@@ -153,16 +153,9 @@ newsletter:
 # -----------------------------------------------------------------------------
 
 collections:
-  books:
-    output: true
-  news:
-    defaults:
-      layout: post
-    output: true
-  projects:
-    output: true
-  teachings:
-    output: true
+  workshops:
+    output: false
+    permalink: /workshops/:path/
 
 # -----------------------------------------------------------------------------
 # Jekyll settings

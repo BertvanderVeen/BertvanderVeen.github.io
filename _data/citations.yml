@@ -1,8 +1,8 @@
 metadata:
-  last_updated: '2026-03-30'
+  last_updated: '2026-05-13'
 papers:
   uu2z7LAAAAAJ:0EnyYjriUFMC:
-    citations: 0
+    citations: 1
     title: 'gllvm 2.0: fast fitting of advanced ordination methods and joint species distribution models'
     year: '2025'
   uu2z7LAAAAAJ:5nxA0vEk-isC:
@@ -18,7 +18,7 @@ papers:
     title: "Package \u2018minic\u2019"
     year: '2025'
   uu2z7LAAAAAJ:LkGwnXOMwfcC:
-    citations: 29
+    citations: 30
     title: 'Concurrent ordination: Simultaneous unconstrained and constrained latent variable modelling'
     year: '2023'
   uu2z7LAAAAAJ:Se3iqnhoufwC:
@@ -26,7 +26,7 @@ papers:
     title: Analyzing dynamic species abundance distributions using generalized linear mixed models
     year: '2022'
   uu2z7LAAAAAJ:Tyk-4Ss8FVUC:
-    citations: 17
+    citations: 18
     title: "Modelling temperature\u2010driven changes in species associations across freshwater communities"
     year: '2022'
   uu2z7LAAAAAJ:W7OEmFMy1HYC:
@@ -38,7 +38,7 @@ papers:
     title: Where is the refrigerator? A spatial approach to wolverine (Gulo gulo) food hoarding behavior in Scandinavia
     year: '2017'
   uu2z7LAAAAAJ:YsMSGLbcyi4C:
-    citations: 8
+    citations: 9
     title: "Predicting niche overlap with model\u2010based ordination"
     year: '2024'
   uu2z7LAAAAAJ:_FxGoFyzp5QC:
@@ -50,11 +50,11 @@ papers:
     title: Ivaretagelse av ville pollinatorer og planter tilknyttet kulturlandskapet i byutviklingen. Oppsummering av forskningsprosjektet BE (E) DIVERSE
     year: '2023'
   uu2z7LAAAAAJ:eQOLeE2rZwMC:
-    citations: 33
+    citations: 34
     title: 'A re-analysis of NH4+ sorption on biochar: Have expectations been too high?'
     year: '2022'
   uu2z7LAAAAAJ:qjMakFHDy7sC:
-    citations: 3
+    citations: 4
     title: Hierarchical ordination, a unifying framework for drivers of community processes
     year: '2024'
   uu2z7LAAAAAJ:u-x6o8ySG0sC:
@@ -62,14 +62,14 @@ papers:
     title: Refrigeration or anti-theft? Food-caching behavior of wolverines (Gulo gulo) in Scandinavia
     year: '2020'
   uu2z7LAAAAAJ:u5HHmVD_uO8C:
-    citations: 34
+    citations: 36
     title: "Model\u2010based ordination for species with unequal niche widths"
     year: '2021'
   uu2z7LAAAAAJ:ufrVoPGSRksC:
-    citations: 60
+    citations: 65
     title: 'Gllvm: Generalized linear latent variable models'
     year: '2020'
   uu2z7LAAAAAJ:zYLM7Y9cAGgC:
-    citations: 3
+    citations: 4
     title: Fast fitting of phylogenetic mixed-effects models
     year: '2024'

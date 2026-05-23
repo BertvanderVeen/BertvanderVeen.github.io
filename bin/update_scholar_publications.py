@@ -3,6 +3,7 @@
 import os
 import re
 import sys
+import time
 import yaml
 from scholarly import scholarly
 
@@ -147,14 +148,18 @@ def main() -> None:
 
     entries = []
     for pub in publications:
+        title = pub.get("bib", {}).get("title", "Unknown")
+        year = pub.get("bib", {}).get("pub_year", "?")
+        try:
+            pub = scholarly.fill(pub)
+            time.sleep(1)
+        except Exception as e:
+            print(f"  Warning: could not fill details for '{title}': {e}")
         try:
             entry = pub_to_bibtex(pub, existing_custom)
             entries.append(entry)
-            title = pub.get("bib", {}).get("title", "Unknown")
-            year = pub.get("bib", {}).get("pub_year", "?")
             print(f"  [{year}] {title}")
         except Exception as e:
-            title = pub.get("bib", {}).get("title", "Unknown")
             print(f"  Warning: skipping '{title}': {e}")
 
     content = "---\n---\n\n" + "\n\n".join(entries) + "\n"

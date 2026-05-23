@@ -37,6 +37,10 @@ While ordination is an important analytical tool for sparse data, my interests i
 
 Ultimately, I am interested in contributing to a gradual **shift toward model-based approached in community ecology**, spanning ordination, diversity estimation, clustering, and related analytical techniques.
 
+# Questions and collaboration
+
+I am always happy to collaborate on topics related to my research interests, or to help with analyses of community ecological data and questions on (model-based) ordination and JSDMs, feel free to reach out via e-mail, social media, or the [gllvm GitHub repository](https://github.com/JenniNiku/gllvm).
+
 # Research interests
 
 My professional interests include:

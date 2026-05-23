@@ -10,13 +10,12 @@ on:
 jobs:
   update-scholar:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        # See CUSTOMIZE.md for details on how to set up PAT for triggering subsequent workflows
-        # with:
-        #   token: ${{ secrets.PAT }}
+      # See CUSTOMIZE.md for details on how to set up PAT for triggering subsequent workflows
+      # with:
+      #   token: ${{ secrets.PAT }}
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -35,9 +34,9 @@ jobs:
           python bin/update_scholar_publications.py
           status=$?
           if [ $status -eq 0 ]; then
-            echo "✅ Publications sync succeeded." | tee -a $GITHUB_STEP_SUMMARY
+            echo "Publications sync succeeded." >> $GITHUB_STEP_SUMMARY
           else
-            echo "❌ Publications sync failed with exit code $status (Scholar may be rate-limiting)." | tee -a $GITHUB_STEP_SUMMARY
+            echo "Publications sync failed with exit code $status." >> $GITHUB_STEP_SUMMARY
           fi
           set -e
 
@@ -48,9 +47,9 @@ jobs:
           python bin/update_scholar_citations.py
           status=$?
           if [ $status -eq 0 ]; then
-            echo "✅ Citation update succeeded." | tee -a $GITHUB_STEP_SUMMARY
+            echo "Citation update succeeded." >> $GITHUB_STEP_SUMMARY
           else
-            echo "❌ Citation update failed with exit code $status." | tee -a $GITHUB_STEP_SUMMARY
+            echo "Citation update failed with exit code $status." >> $GITHUB_STEP_SUMMARY
           fi
           set -e
 

@@ -29,16 +29,23 @@ jobs:
           pip install -r requirements.txt
 
       - name: Sync publications from Google Scholar
+        shell: bash
         run: |
-          echo "📚 Syncing publications..."
-          timeout 180 python bin/update_scholar_publications.py
+          set +e
+          python bin/update_scholar_publications.py
+          status=$?
+          if [ $status -eq 0 ]; then
+            echo "✅ Publications sync succeeded." | tee -a $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Publications sync failed with exit code $status (Scholar may be rate-limiting)." | tee -a $GITHUB_STEP_SUMMARY
+          fi
+          set -e
 
       - name: Update citation counts
         shell: bash
         run: |
           set +e
-          echo "📊 Updating citation counts..."
-          timeout 90 python bin/update_scholar_citations.py
+          python bin/update_scholar_citations.py
           status=$?
           if [ $status -eq 0 ]; then
             echo "✅ Citation update succeeded." | tee -a $GITHUB_STEP_SUMMARY

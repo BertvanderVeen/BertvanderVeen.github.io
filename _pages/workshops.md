@@ -42,6 +42,7 @@ horizontal: false
 <!-- Display projects without categories -->
 
 {% assign sorted_projects = categorized_projects | sort: "date" | reverse %}
+
   <!-- Generate cards for each project -->
 
 {% if page.horizontal %}

@@ -11,7 +11,7 @@ date: 04-08-2024
 
 More about IRSAE: https://www.inn.no/english/about-inn/faculty-of-applied-ecology-agricultural-sciences-a/irsae/.
 
-Bert van der Veen, Norwegian Institute of Bioeconomy Research 
+Bert van der Veen, Norwegian Institute of Bioeconomy Research
 Sam Perrin, Norwegian University of Science and Technology
 Jenni Niku, University of Jyväskylä
 

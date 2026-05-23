@@ -8,6 +8,7 @@ date: 20-07-2025
 ---
 
 ## Summer School in Model-based multivariate analysis for ecologists
+
 The summer school aims to teach understanding and application of advanced multivariate methods to ecologists. By the end of the summer school, participants should be able to understand multispecies mixed-effects models, Joint Species Distribution Models, and model-based ordination methods, and be able to independently apply them to their own data. Basic visualization of model outputs for presentation in scientific publication will be covered in the exercises. All participants are invited to bring their own data in order to get as much out of the summer school as possible, in particular by practicing application of the methods to a familiar study system.
 
 Main organizer: Bert van der Veen <br>

@@ -1,5 +1,5 @@
 metadata:
-  last_updated: '2026-05-13'
+  last_updated: '2026-05-27'
 papers:
   uu2z7LAAAAAJ:0EnyYjriUFMC:
     citations: 1
@@ -66,7 +66,7 @@ papers:
     title: "Model\u2010based ordination for species with unequal niche widths"
     year: '2021'
   uu2z7LAAAAAJ:ufrVoPGSRksC:
-    citations: 65
+    citations: 66
     title: 'Gllvm: Generalized linear latent variable models'
     year: '2020'
   uu2z7LAAAAAJ:zYLM7Y9cAGgC:

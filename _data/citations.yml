@@ -1,8 +1,8 @@
 metadata:
-  last_updated: '2026-05-27'
+  last_updated: '2026-06-05'
 papers:
   uu2z7LAAAAAJ:0EnyYjriUFMC:
-    citations: 1
+    citations: 2
     title: 'gllvm 2.0: fast fitting of advanced ordination methods and joint species distribution models'
     year: '2025'
   uu2z7LAAAAAJ:5nxA0vEk-isC:
@@ -38,7 +38,7 @@ papers:
     title: Where is the refrigerator? A spatial approach to wolverine (Gulo gulo) food hoarding behavior in Scandinavia
     year: '2017'
   uu2z7LAAAAAJ:YsMSGLbcyi4C:
-    citations: 9
+    citations: 11
     title: "Predicting niche overlap with model\u2010based ordination"
     year: '2024'
   uu2z7LAAAAAJ:_FxGoFyzp5QC:

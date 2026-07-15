@@ -1,5 +1,5 @@
 metadata:
-  last_updated: '2026-06-19'
+  last_updated: '2026-07-15'
 papers:
   uu2z7LAAAAAJ:0EnyYjriUFMC:
     citations: 2
@@ -18,7 +18,7 @@ papers:
     title: "Package \u2018minic\u2019"
     year: '2025'
   uu2z7LAAAAAJ:LkGwnXOMwfcC:
-    citations: 30
+    citations: 32
     title: 'Concurrent ordination: Simultaneous unconstrained and constrained latent variable modelling'
     year: '2023'
   uu2z7LAAAAAJ:Se3iqnhoufwC:
@@ -30,7 +30,7 @@ papers:
     title: "Modelling temperature\u2010driven changes in species associations across freshwater communities"
     year: '2022'
   uu2z7LAAAAAJ:W7OEmFMy1HYC:
-    citations: 9
+    citations: 11
     title: A comparison of joint species distribution models for percent cover data
     year: '2024'
   uu2z7LAAAAAJ:WF5omc3nYNoC:
@@ -50,7 +50,7 @@ papers:
     title: Ivaretagelse av ville pollinatorer og planter tilknyttet kulturlandskapet i byutviklingen. Oppsummering av forskningsprosjektet BE (E) DIVERSE
     year: '2023'
   uu2z7LAAAAAJ:eQOLeE2rZwMC:
-    citations: 34
+    citations: 35
     title: 'A re-analysis of NH4+ sorption on biochar: Have expectations been too high?'
     year: '2022'
   uu2z7LAAAAAJ:qjMakFHDy7sC:
@@ -66,7 +66,7 @@ papers:
     title: "Model\u2010based ordination for species with unequal niche widths"
     year: '2021'
   uu2z7LAAAAAJ:ufrVoPGSRksC:
-    citations: 67
+    citations: 69
     title: 'Gllvm: Generalized linear latent variable models'
     year: '2020'
   uu2z7LAAAAAJ:zYLM7Y9cAGgC:

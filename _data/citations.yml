@@ -1,8 +1,8 @@
 metadata:
-  last_updated: '2026-07-15'
+  last_updated: '2026-08-10'
 papers:
   uu2z7LAAAAAJ:0EnyYjriUFMC:
-    citations: 2
+    citations: 3
     title: 'gllvm 2.0: fast fitting of advanced ordination methods and joint species distribution models'
     year: '2025'
   uu2z7LAAAAAJ:5nxA0vEk-isC:
@@ -16,9 +16,9 @@ papers:
   uu2z7LAAAAAJ:IjCSPb-OGe4C:
     citations: 0
     title: "Package \u2018minic\u2019"
-    year: '2025'
+    year: Unknown Year
   uu2z7LAAAAAJ:LkGwnXOMwfcC:
-    citations: 32
+    citations: 35
     title: 'Concurrent ordination: Simultaneous unconstrained and constrained latent variable modelling'
     year: '2023'
   uu2z7LAAAAAJ:Se3iqnhoufwC:
@@ -26,11 +26,11 @@ papers:
     title: Analyzing dynamic species abundance distributions using generalized linear mixed models
     year: '2022'
   uu2z7LAAAAAJ:Tyk-4Ss8FVUC:
-    citations: 19
+    citations: 20
     title: "Modelling temperature\u2010driven changes in species associations across freshwater communities"
     year: '2022'
   uu2z7LAAAAAJ:W7OEmFMy1HYC:
-    citations: 11
+    citations: 14
     title: A comparison of joint species distribution models for percent cover data
     year: '2024'
   uu2z7LAAAAAJ:WF5omc3nYNoC:
@@ -38,7 +38,7 @@ papers:
     title: Where is the refrigerator? A spatial approach to wolverine (Gulo gulo) food hoarding behavior in Scandinavia
     year: '2017'
   uu2z7LAAAAAJ:YsMSGLbcyi4C:
-    citations: 11
+    citations: 12
     title: "Predicting niche overlap with model\u2010based ordination"
     year: '2024'
   uu2z7LAAAAAJ:_FxGoFyzp5QC:
@@ -58,7 +58,7 @@ papers:
     title: Hierarchical ordination, a unifying framework for drivers of community processes
     year: '2024'
   uu2z7LAAAAAJ:u-x6o8ySG0sC:
-    citations: 36
+    citations: 35
     title: Refrigeration or anti-theft? Food-caching behavior of wolverines (Gulo gulo) in Scandinavia
     year: '2020'
   uu2z7LAAAAAJ:u5HHmVD_uO8C:
@@ -66,7 +66,7 @@ papers:
     title: "Model\u2010based ordination for species with unequal niche widths"
     year: '2021'
   uu2z7LAAAAAJ:ufrVoPGSRksC:
-    citations: 69
+    citations: 62
     title: 'Gllvm: Generalized linear latent variable models'
     year: '2020'
   uu2z7LAAAAAJ:zYLM7Y9cAGgC:

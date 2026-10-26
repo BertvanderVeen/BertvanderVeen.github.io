@@ -2,9 +2,7 @@ name: Update Google Scholar
 
 on:
   schedule:
-    - cron: "0 0 * * 1" # Monday
-    - cron: "0 0 * * 3" # Wednesday
-    - cron: "0 0 * * 5" # Friday
+    - cron: "0 0 * * *" # Daily
   workflow_dispatch:
 
 jobs:
@@ -28,30 +26,10 @@ jobs:
           pip install -r requirements.txt
 
       - name: Sync publications from Google Scholar
-        shell: bash
-        run: |
-          set +e
-          python bin/update_scholar_publications.py
-          status=$?
-          if [ $status -eq 0 ]; then
-            echo "Publications sync succeeded." >> $GITHUB_STEP_SUMMARY
-          else
-            echo "Publications sync failed with exit code $status." >> $GITHUB_STEP_SUMMARY
-          fi
-          set -e
+        run: python bin/update_scholar_publications.py
 
       - name: Update citation counts
-        shell: bash
-        run: |
-          set +e
-          python bin/update_scholar_citations.py
-          status=$?
-          if [ $status -eq 0 ]; then
-            echo "Citation update succeeded." >> $GITHUB_STEP_SUMMARY
-          else
-            echo "Citation update failed with exit code $status." >> $GITHUB_STEP_SUMMARY
-          fi
-          set -e
+        run: python bin/update_scholar_citations.py
 
       - name: Configure Git
         run: |

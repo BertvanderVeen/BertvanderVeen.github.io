@@ -39,6 +39,16 @@
     li {
       margin-bottom: 1rem;
 
+      // short, thin rule between publications within a year
+      &:not(:last-child)::after {
+        content: "";
+        display: block;
+        width: 3rem;
+        border-top: 1px solid var(--global-divider-color);
+        margin: 1rem auto 0;
+        opacity: 0.6;
+      }
+
       .preview {
         display: inline-block;
       }

@@ -5,6 +5,10 @@ on:
     - cron: "0 0 * * *" # Daily
   workflow_dispatch:
 
+permissions:
+  contents: write
+  actions: write
+
 jobs:
   update-scholar:
     runs-on: ubuntu-latest
@@ -39,7 +43,11 @@ jobs:
       - name: Commit and push if changed
         run: |
           git add _bibliography/papers.bib _data/citations.yml
-          git diff --staged --quiet || (
+          if ! git diff --staged --quiet; then
             git commit -m "Update Google Scholar publications and citations"
             git push
-          )
+            # Pushes made with GITHUB_TOKEN do not trigger other workflows, so deploy explicitly.
+            gh workflow run deploy.yml --ref "${GITHUB_REF_NAME}"
+          fi
+        env:
+          GH_TOKEN: ${{ github.token }}

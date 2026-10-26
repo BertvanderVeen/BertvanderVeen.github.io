@@ -275,7 +275,7 @@ display_categories: ["external-services"] # these categories will be displayed o
 
 scholar:
   last_name: [van der Veen]
-  first_name: [Bert]
+  first_name: [Bert, B, B.]
 
   style: apa
   locale: en

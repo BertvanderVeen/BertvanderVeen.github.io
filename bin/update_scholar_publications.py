@@ -80,6 +80,55 @@ def make_key(pub: dict) -> str:
     return f"{last_name}{year}{title_word}"
 
 
+PARTICLES = {"van", "von", "der", "den", "de", "del", "della", "di", "da", "du", "la", "le", "ter", "ten", "af"}
+
+
+# Scholar spells the same person differently across papers; map known variants
+# (lowercased, straight apostrophes) to one canonical form.
+AUTHOR_ALIASES = {
+    "bert van der veen": "Bert van der Veen",
+    "b van der veen": "Bert van der Veen",
+    "robert b o'hara": "Robert B O'Hara",
+    "robert brian o'hara": "Robert B O'Hara",
+    "robert o'hara": "Robert B O'Hara",
+    "bob o'hara": "Robert B O'Hara",
+    "rb o'hara": "Robert B O'Hara",
+    "r b o'hara": "Robert B O'Hara",
+    "francis kc hui": "Francis KC Hui",
+    "fkc hui": "Francis KC Hui",
+    "knut a hovstad": "Knut A Hovstad",
+    "knut anders hovstad": "Knut A Hovstad",
+    "knut hovstad": "Knut A Hovstad",
+    "erik b solbu": "Erik B Solbu",
+    "erik blystad solbu": "Erik B Solbu",
+    "erik solbu": "Erik B Solbu",
+}
+
+
+def format_authors(authors: str) -> str:
+    """Brace multi-word surnames ("Bert van der Veen" -> "Bert {van der Veen}").
+
+    Without braces BibTeX treats lowercase particles as a separate "von" part,
+    which the bib layout drops (rendering "Bert Veen") and which never matches
+    scholar.last_name in _config.yml.
+    """
+    out = []
+    for name in authors.split(" and "):
+        name = name.strip().replace("{", "").replace("}", "")
+        name = AUTHOR_ALIASES.get(name.lower().replace("\u2019", "'"), name)
+        parts = name.split()
+        start = next(
+            (i for i, w in enumerate(parts) if i > 0 and w.lower() in PARTICLES), None
+        )
+        if start is not None and start < len(parts) - 1:
+            surname = " ".join(parts[start:])
+            if surname.lower() == "van der veen":
+                surname = "van der Veen"
+            name = " ".join(parts[:start] + ["{" + surname + "}"])
+        out.append(name)
+    return " and ".join(out)
+
+
 def pub_to_bibtex(pub: dict, existing_custom: dict) -> str:
     """Convert a scholarly publication dict to a BibTeX entry string."""
     bib = pub.get("bib", {})
@@ -103,7 +152,7 @@ def pub_to_bibtex(pub: dict, existing_custom: dict) -> str:
 
     raw_fields = [
         field_line("title", bib.get("title", "")),
-        field_line("author", bib.get("author", "")),
+        field_line("author", format_authors(bib.get("author", ""))),
         field_line(venue_field, journal or bib.get("venue", "")),
         field_line("volume", bib.get("volume", "")),
         field_line("number", bib.get("number", "")),

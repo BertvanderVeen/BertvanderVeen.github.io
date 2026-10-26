@@ -102,10 +102,53 @@ AUTHOR_ALIASES = {
     "erik b solbu": "Erik B Solbu",
     "erik blystad solbu": "Erik B Solbu",
     "erik solbu": "Erik B Solbu",
+    "marie henriksen": "Marie Vestergaard Henriksen",
+    # initials-only variants that no other paper spells out
+    "di warton": "David I Warton",
+    "r herliansyah": "Riki Herliansyah",
 }
 
 
-def format_authors(authors: str) -> str:
+def split_name(name: str) -> tuple:
+    """Split "Bert van der Veen" into (["Bert"], "van der Veen")."""
+    parts = name.split()
+    start = next(
+        (i for i, w in enumerate(parts) if i > 0 and w.lower() in PARTICLES),
+        len(parts) - 1,
+    )
+    return parts[:start], " ".join(parts[start:])
+
+
+def is_initials(token: str) -> bool:
+    return token.rstrip(".").isupper() and len(token.rstrip(".")) <= 3
+
+
+def initials_of(given: list) -> str:
+    return "".join(
+        t.rstrip(".").lower() if is_initials(t) else t[0].lower() for t in given
+    )
+
+
+def build_name_index(author_strings: list) -> dict:
+    """Map (surname, initials) -> full name, for names spelled out somewhere.
+
+    Ambiguous keys (two different full names, same initials) are dropped.
+    """
+    index = {}
+    for authors in author_strings:
+        for name in authors.split(" and "):
+            name = name.replace("{", "").replace("}", "").strip()
+            name = AUTHOR_ALIASES.get(name.lower().replace("\u2019", "'"), name)
+            given, surname = split_name(name)
+            if not given or all(is_initials(t) for t in given):
+                continue
+            key = (surname.lower(), initials_of(given))
+            if index.setdefault(key, name) != name:
+                index[key] = None
+    return {k: v for k, v in index.items() if v}
+
+
+def format_authors(authors: str, name_index: dict = None) -> str:
     """Brace multi-word surnames ("Bert van der Veen" -> "Bert {van der Veen}").
 
     Without braces BibTeX treats lowercase particles as a separate "von" part,
@@ -116,6 +159,9 @@ def format_authors(authors: str) -> str:
     for name in authors.split(" and "):
         name = name.strip().replace("{", "").replace("}", "")
         name = AUTHOR_ALIASES.get(name.lower().replace("\u2019", "'"), name)
+        given, surname = split_name(name)
+        if name_index and given and all(is_initials(t) for t in given):
+            name = name_index.get((surname.lower(), initials_of(given)), name)
         parts = name.split()
         start = next(
             (i for i, w in enumerate(parts) if i > 0 and w.lower() in PARTICLES), None
@@ -129,7 +175,7 @@ def format_authors(authors: str) -> str:
     return " and ".join(out)
 
 
-def pub_to_bibtex(pub: dict, existing_custom: dict) -> str:
+def pub_to_bibtex(pub: dict, existing_custom: dict, name_index: dict = None) -> str:
     """Convert a scholarly publication dict to a BibTeX entry string."""
     bib = pub.get("bib", {})
 
@@ -152,7 +198,7 @@ def pub_to_bibtex(pub: dict, existing_custom: dict) -> str:
 
     raw_fields = [
         field_line("title", bib.get("title", "")),
-        field_line("author", format_authors(bib.get("author", ""))),
+        field_line("author", format_authors(bib.get("author", ""), name_index)),
         field_line(venue_field, journal or bib.get("venue", "")),
         field_line("volume", bib.get("volume", "")),
         field_line("number", bib.get("number", "")),
@@ -195,17 +241,27 @@ def main() -> None:
         reverse=True,
     )
 
-    entries = []
+    filled = []
     for pub in publications:
         title = pub.get("bib", {}).get("title", "Unknown")
-        year = pub.get("bib", {}).get("pub_year", "?")
         try:
             pub = scholarly.fill(pub)
             time.sleep(1)
         except Exception as e:
             print(f"  Warning: could not fill details for '{title}': {e}")
+        filled.append(pub)
+
+    # Expand initials-only authors using spellings found on other papers.
+    name_index = build_name_index(
+        [p.get("bib", {}).get("author", "") for p in filled]
+    )
+
+    entries = []
+    for pub in filled:
+        title = pub.get("bib", {}).get("title", "Unknown")
+        year = pub.get("bib", {}).get("pub_year", "?")
         try:
-            entry = pub_to_bibtex(pub, existing_custom)
+            entry = pub_to_bibtex(pub, existing_custom, name_index)
             entries.append(entry)
             print(f"  [{year}] {title}")
         except Exception as e:

@@ -2,7 +2,7 @@ name: Update Google Scholar
 
 on:
   schedule:
-    - cron: "0 0 * * *" # Daily
+    - cron: "0 0 1,15 * *" # 1st and 15th of each month
   workflow_dispatch:
 
 permissions:

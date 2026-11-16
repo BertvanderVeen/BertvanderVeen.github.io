@@ -32,6 +32,21 @@ def load_scholar_user_id() -> str:
         sys.exit(1)
 
 
+def setup_proxy() -> None:
+    """Route requests through ScraperAPI when SCRAPER_API_KEY is set."""
+    api_key = os.environ.get("SCRAPER_API_KEY")
+    if not api_key:
+        return
+    from scholarly import ProxyGenerator
+
+    pg = ProxyGenerator()
+    if not pg.ScraperAPI(api_key):
+        print("Could not set up the ScraperAPI proxy; check SCRAPER_API_KEY.")
+        sys.exit(1)
+    scholarly.use_proxy(pg)
+    print("Using ScraperAPI proxy.")
+
+
 SCHOLAR_USER_ID: str = load_scholar_user_id()
 OUTPUT_FILE: str = "_data/citations.yml"
 
@@ -40,6 +55,8 @@ def get_scholar_citations() -> None:
     """Fetch and update Google Scholar citation data."""
     print(f"Fetching citations for Google Scholar ID: {SCHOLAR_USER_ID}")
     today = datetime.now().strftime("%Y-%m-%d")
+
+    existing_data = None
 
     # Check if the output file was already updated today
     if os.path.exists(OUTPUT_FILE):
@@ -64,9 +81,10 @@ def get_scholar_citations() -> None:
 
     scholarly.set_timeout(15)
     scholarly.set_retries(3)
+    setup_proxy()
     try:
         author = scholarly.search_author_id(SCHOLAR_USER_ID)
-        author_data = scholarly.fill(author)
+        author_data = scholarly.fill(author, sections=["basics", "publications"])
     except Exception as e:
         print(
             f"Error fetching author data from Google Scholar for user ID '{SCHOLAR_USER_ID}': {e}. Please check your internet connection and Scholar user ID."

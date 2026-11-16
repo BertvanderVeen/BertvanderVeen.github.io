@@ -31,9 +31,13 @@ jobs:
 
       - name: Sync publications from Google Scholar
         run: python bin/update_scholar_publications.py
+        env:
+          SCRAPER_API_KEY: ${{ secrets.SCRAPER_API_KEY }}
 
       - name: Update citation counts
         run: python bin/update_scholar_citations.py
+        env:
+          SCRAPER_API_KEY: ${{ secrets.SCRAPER_API_KEY }}
 
       - name: Configure Git
         run: |

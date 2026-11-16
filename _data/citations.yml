@@ -1,8 +1,8 @@
 metadata:
-  last_updated: '2026-10-26'
+  last_updated: '2026-11-16'
 papers:
   uu2z7LAAAAAJ:0EnyYjriUFMC:
-    citations: 5
+    citations: 6
     title: 'gllvm 2.0: fast fitting of advanced ordination methods and joint species distribution models'
     year: '2025'
   uu2z7LAAAAAJ:3fE2CSJIrl8C:
@@ -26,11 +26,11 @@ papers:
     title: "Package \u2018minic\u2019"
     year: Unknown Year
   uu2z7LAAAAAJ:LkGwnXOMwfcC:
-    citations: 39
+    citations: 40
     title: 'Concurrent ordination: Simultaneous unconstrained and constrained latent variable modelling'
     year: '2023'
   uu2z7LAAAAAJ:Se3iqnhoufwC:
-    citations: 9
+    citations: 10
     title: Analyzing dynamic species abundance distributions using generalized linear mixed models
     year: '2022'
   uu2z7LAAAAAJ:Tyk-4Ss8FVUC:
@@ -38,7 +38,7 @@ papers:
     title: "Modelling temperature\u2010driven changes in species associations across freshwater communities"
     year: '2022'
   uu2z7LAAAAAJ:W7OEmFMy1HYC:
-    citations: 16
+    citations: 17
     title: A comparison of joint species distribution models for percent cover data
     year: '2024'
   uu2z7LAAAAAJ:WF5omc3nYNoC:
@@ -58,23 +58,27 @@ papers:
     title: Ivaretagelse av ville pollinatorer og planter tilknyttet kulturlandskapet i byutviklingen. Oppsummering av forskningsprosjektet BE (E) DIVERSE
     year: '2023'
   uu2z7LAAAAAJ:eQOLeE2rZwMC:
-    citations: 36
+    citations: 37
     title: 'A re-analysis of NH4+ sorption on biochar: Have expectations been too high?'
     year: '2022'
+  uu2z7LAAAAAJ:kNdYIx-mwKoC:
+    citations: 0
+    title: 'gcloglog: Methods for Fitting Binomial Models with the Generalized Complementary Log-Log Function'
+    year: '2026'
   uu2z7LAAAAAJ:qjMakFHDy7sC:
     citations: 4
     title: Hierarchical ordination, a unifying framework for drivers of community processes
     year: '2024'
   uu2z7LAAAAAJ:u-x6o8ySG0sC:
-    citations: 37
+    citations: 38
     title: Refrigeration or anti-theft? Food-caching behavior of wolverines (Gulo gulo) in Scandinavia
     year: '2020'
   uu2z7LAAAAAJ:u5HHmVD_uO8C:
-    citations: 36
+    citations: 37
     title: "Model\u2010based ordination for species with unequal niche widths"
     year: '2021'
   uu2z7LAAAAAJ:ufrVoPGSRksC:
-    citations: 67
+    citations: 68
     title: 'Gllvm: Generalized linear latent variable models'
     year: '2020'
   uu2z7LAAAAAJ:zYLM7Y9cAGgC:

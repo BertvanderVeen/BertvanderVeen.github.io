@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 
+import json
 import os
 import re
 import sys
-import time
+import urllib.parse
+import urllib.request
 import yaml
 from scholarly import scholarly
 
@@ -35,8 +37,12 @@ def load_scholar_user_id() -> str:
         sys.exit(1)
 
 
-def parse_existing_custom_fields(filepath: str) -> dict:
-    """Return a dict of bibtex_key -> {field: value} for all custom al-folio fields."""
+def normalize_title(title: str) -> str:
+    return re.sub(r"\W+", "", title.lower())
+
+
+def parse_existing_entries(filepath: str) -> dict:
+    """Return normalized title -> {"key", "text", "custom"} for entries in papers.bib."""
     result = {}
     if not os.path.exists(filepath):
         return result
@@ -47,37 +53,59 @@ def parse_existing_custom_fields(filepath: str) -> dict:
     for entry_match in re.finditer(r"@\w+\{(\w+),(.*?)\n\}", content, re.DOTALL):
         key = entry_match.group(1)
         body = entry_match.group(2)
-        fields = {}
+        title = re.search(r"^\s*title\s*=\s*\{(.*)\},?\s*$", body, re.MULTILINE)
+        if not title:
+            continue
+        custom = {}
         for field_match in re.finditer(r"(\w+)\s*=\s*\{([^}]*)\}", body):
             fname = field_match.group(1).strip().lower()
             fvalue = field_match.group(2).strip()
             if fname in CUSTOM_FIELDS:
-                fields[fname] = fvalue
-        if fields:
-            result[key] = fields
+                custom[fname] = fvalue
+        result[normalize_title(title.group(1))] = {
+            "key": key,
+            "text": entry_match.group(0),
+            "custom": custom,
+        }
 
     return result
 
 
-def make_key(pub: dict) -> str:
+def needs_refresh(entry: dict) -> bool:
+    """Re-fetch preprints (to pick up the published version) and entries without authors."""
+    text = entry["text"].lower()
+    return "rxiv" in text or not re.search(r"^\s*author\s*=", text, re.MULTILINE)
+
+
+def setup_proxy() -> None:
+    """Route requests through ScraperAPI when SCRAPER_API_KEY is set.
+
+    Google Scholar blocks GitHub Actions IPs, so the workflow needs a proxy;
+    local runs work without one.
+    """
+    api_key = os.environ.get("SCRAPER_API_KEY")
+    if not api_key:
+        return
+    from scholarly import ProxyGenerator
+
+    pg = ProxyGenerator()
+    if not pg.ScraperAPI(api_key):
+        print("Could not set up the ScraperAPI proxy; check SCRAPER_API_KEY.")
+        sys.exit(1)
+    scholarly.use_proxy(pg)
+    print("Using ScraperAPI proxy.")
+
+
+def make_key(meta: dict) -> str:
     """Generate a BibTeX key: firstauthorlastname + year + firsttitleword."""
-    bib = pub.get("bib", {})
-    author = bib.get("author", "")
-    year = str(bib.get("pub_year", "0000"))
-    title = bib.get("title", "unknown")
+    first_author = meta.get("author", "").split(" and ")[0].strip()
+    _, last_name = split_name(first_author) if first_author else ([], "")
+    last_name = re.sub(r"[^a-zA-Z]", "", last_name.split()[-1] if last_name else "").lower()
 
-    first_author = author.split(" and ")[0].strip()
-    if "," in first_author:
-        last_name = first_author.split(",")[0].strip()
-    else:
-        parts = first_author.split()
-        last_name = parts[-1] if parts else "unknown"
-    last_name = re.sub(r"[^a-zA-Z]", "", last_name).lower()
-
-    title_words = re.sub(r"[^a-zA-Z\s]", "", title).split()
+    title_words = re.sub(r"[^a-zA-Z\s]", "", meta.get("title", "")).split()
     title_word = title_words[0].lower() if title_words else "unknown"
 
-    return f"{last_name}{year}{title_word}"
+    return f"{last_name or 'unknown'}{meta.get('year', '')}{title_word}"
 
 
 PARTICLES = {"van", "von", "der", "den", "de", "del", "della", "di", "da", "du", "la", "le", "ter", "ten", "af"}
@@ -109,6 +137,20 @@ AUTHOR_ALIASES = {
 }
 
 
+def alias_key(name: str) -> str:
+    """Lowercase, straight apostrophes, no dots, joined initials ("K. C." -> "kc")."""
+    key = name.lower().replace("\u2019", "'").replace(".", " ")
+    key = " ".join(key.split())
+    return re.sub(r"\b(\w) (?=\w\b)", r"\1", key)
+
+
+ALIASES = {alias_key(k): v for k, v in AUTHOR_ALIASES.items()}
+
+
+def canonical_name(name: str) -> str:
+    return ALIASES.get(alias_key(name), name)
+
+
 def split_name(name: str) -> tuple:
     """Split "Bert van der Veen" into (["Bert"], "van der Veen")."""
     parts = name.split()
@@ -138,7 +180,7 @@ def build_name_index(author_strings: list) -> dict:
     for authors in author_strings:
         for name in authors.split(" and "):
             name = name.replace("{", "").replace("}", "").strip()
-            name = AUTHOR_ALIASES.get(name.lower().replace("\u2019", "'"), name)
+            name = canonical_name(name)
             given, surname = split_name(name)
             if not given or all(is_initials(t) for t in given):
                 continue
@@ -158,7 +200,7 @@ def format_authors(authors: str, name_index: dict = None) -> str:
     out = []
     for name in authors.split(" and "):
         name = name.strip().replace("{", "").replace("}", "")
-        name = AUTHOR_ALIASES.get(name.lower().replace("\u2019", "'"), name)
+        name = canonical_name(name)
         given, surname = split_name(name)
         if name_index and given and all(is_initials(t) for t in given):
             name = name_index.get((surname.lower(), initials_of(given)), name)
@@ -175,43 +217,90 @@ def format_authors(authors: str, name_index: dict = None) -> str:
     return " and ".join(out)
 
 
-def pub_to_bibtex(pub: dict, existing_custom: dict, name_index: dict = None) -> str:
-    """Convert a scholarly publication dict to a BibTeX entry string."""
+def lookup_openalex(title: str) -> dict:
+    """Find a work by exact (normalized) title on OpenAlex, preferring the published version.
+
+    Google Scholar's per-publication pages sit behind a JavaScript check that
+    scholarly cannot pass, so details come from OpenAlex instead.
+    """
+    url = "https://api.openalex.org/works?" + urllib.parse.urlencode(
+        {"search": title, "per-page": 10}
+    )
+    req = urllib.request.Request(url, headers={"User-Agent": "al-folio-scholar-sync"})
+    with urllib.request.urlopen(req, timeout=30) as resp:
+        works = json.load(resp).get("results", [])
+    matches = [
+        w
+        for w in works
+        if normalize_title(w.get("title") or "") == normalize_title(title)
+        and any(
+            "van der veen" in a["author"]["display_name"].lower()
+            for a in w.get("authorships", [])
+        )
+    ]
+    matches.sort(key=lambda w: w.get("type") == "preprint")
+    return matches[0] if matches else None
+
+
+def openalex_meta(work: dict, title: str, fallback_venue: str) -> dict:
+    location = work.get("primary_location") or {}
+    source = location.get("source") or {}
+    biblio = work.get("biblio") or {}
+    pages = "-".join(p for p in (biblio.get("first_page"), biblio.get("last_page")) if p)
+    if biblio.get("first_page") == biblio.get("last_page"):
+        pages = biblio.get("first_page") or ""
+    doi = (work.get("doi") or "").replace("https://doi.org/", "")
+    if not source and "cran.package" in doi.lower():
+        fallback_venue = "R package"
+    return {
+        "title": title,
+        "author": " and ".join(a["author"]["display_name"] for a in work.get("authorships", [])),
+        "journal": re.sub(r"\s*\(.*\)$", "", source.get("display_name") or "") or fallback_venue,
+        "volume": biblio.get("volume"),
+        "number": biblio.get("issue"),
+        "pages": pages,
+        "year": work.get("publication_year"),
+        "publisher": source.get("host_organization_name"),
+        "doi": doi,
+        "url": (location.get("landing_page_url") or work.get("doi") or "").replace("http://", "https://"),
+    }
+
+
+def scholar_meta(pub: dict, scholar_id: str) -> dict:
+    """Minimal entry from the Scholar profile list (no authors available there)."""
     bib = pub.get("bib", {})
+    return {
+        "title": bib.get("title", ""),
+        "journal": re.sub(r",?\s*\d{4}$", "", bib.get("citation", "")).strip(),
+        "year": bib.get("pub_year", ""),
+        "url": "https://scholar.google.com/citations?view_op=view_citation&citation_for_view="
+        + pub.get("author_pub_id", f"{scholar_id}:"),
+    }
 
-    venue = (bib.get("venue") or "").lower()
-    journal = bib.get("journal") or ""
 
-    if any(w in venue for w in ("conference", "proceedings", "workshop", "symposium")):
-        entry_type = "inproceedings"
-        venue_field = "booktitle"
-    else:
-        entry_type = "article"
-        venue_field = "journal"
-
-    key = make_key(pub)
-
+def meta_to_bibtex(meta: dict, key: str, custom: dict, name_index: dict = None) -> str:
     def field_line(name, value):
-        if value:
+        if value and name not in custom:
             return f"  {name:<12} = {{{value}}},"
         return None
 
     raw_fields = [
-        field_line("title", bib.get("title", "")),
-        field_line("author", format_authors(bib.get("author", ""), name_index)),
-        field_line(venue_field, journal or bib.get("venue", "")),
-        field_line("volume", bib.get("volume", "")),
-        field_line("number", bib.get("number", "")),
-        field_line("pages", bib.get("pages", "")),
-        field_line("year", bib.get("pub_year", "")),
-        field_line("publisher", bib.get("publisher", "")),
-        field_line("url", pub.get("pub_url", "")),
+        field_line("title", meta.get("title")),
+        field_line("author", format_authors(meta["author"], name_index) if meta.get("author") else ""),
+        field_line("journal", meta.get("journal")),
+        field_line("volume", meta.get("volume")),
+        field_line("number", meta.get("number")),
+        field_line("pages", meta.get("pages")),
+        field_line("year", meta.get("year")),
+        field_line("publisher", meta.get("publisher")),
+        field_line("doi", meta.get("doi")),
+        field_line("url", meta.get("url")),
     ]
 
-    for fname, fvalue in existing_custom.get(key, {}).items():
-        raw_fields.append(field_line(fname, fvalue))
+    for fname, fvalue in custom.items():
+        raw_fields.append(f"  {fname:<12} = {{{fvalue}}},")
 
-    lines = [f"@{entry_type}{{{key},"] + [l for l in raw_fields if l] + ["}"]
+    lines = [f"@article{{{key},"] + [l for l in raw_fields if l] + ["}"]
     return "\n".join(lines)
 
 
@@ -219,17 +308,20 @@ def main() -> None:
     scholar_id = load_scholar_user_id()
     print(f"Fetching publications for Google Scholar ID: {scholar_id}")
 
-    existing_custom = parse_existing_custom_fields(BIBLIOGRAPHY_FILE)
-    print(f"Preserving custom fields from {len(existing_custom)} existing entries.")
+    existing = parse_existing_entries(BIBLIOGRAPHY_FILE)
+    print(f"Found {len(existing)} existing entries in {BIBLIOGRAPHY_FILE}.")
 
     scholarly.set_timeout(15)
     scholarly.set_retries(3)
+    setup_proxy()
 
     try:
         author = scholarly.search_author_id(scholar_id)
-        author_data = scholarly.fill(author)
+        author_data = scholarly.fill(author, sections=["basics", "publications"])
     except Exception as e:
         print(f"Error fetching author data from Google Scholar: {e}")
+        if os.environ.get("GITHUB_ACTIONS") and not os.environ.get("SCRAPER_API_KEY"):
+            print("Google Scholar blocks GitHub Actions; add a SCRAPER_API_KEY repository secret.")
         sys.exit(1)
 
     publications = author_data.get("publications", [])
@@ -241,38 +333,72 @@ def main() -> None:
         reverse=True,
     )
 
-    filled = []
+    # Only look up details for new publications and preprints; everything else
+    # is kept as it is in papers.bib. A failed lookup never replaces an entry.
+    results = []
+    failed = 0
     for pub in publications:
         title = pub.get("bib", {}).get("title", "Unknown")
+        old = existing.get(normalize_title(title))
+        if old and not needs_refresh(old):
+            results.append((old, None))
+            continue
         try:
-            pub = scholarly.fill(pub)
-            time.sleep(1)
+            work = lookup_openalex(title)
         except Exception as e:
-            print(f"  Warning: could not fill details for '{title}': {e}")
-        filled.append(pub)
+            failed += 1
+            print(f"  Warning: OpenAlex lookup failed for '{title}': {e}")
+            if old:
+                results.append((old, None))
+            continue
+        has_authors = old and re.search(r"^\s*author\s*=", old["text"], re.MULTILINE)
+        if work and has_authors and work.get("type") == "preprint":
+            # Still a preprint: keep the existing (possibly hand-edited) entry.
+            results.append((old, None))
+            continue
+        if work:
+            meta = openalex_meta(work, title, scholar_meta(pub, scholar_id)["journal"])
+            print(f"  [{meta['year']}] {title} (OpenAlex)")
+        elif old:
+            results.append((old, None))
+            continue
+        else:
+            meta = scholar_meta(pub, scholar_id)
+            print(f"  Warning: '{title}' not found on OpenAlex; adding it without authors.")
+        results.append((old, meta))
 
     # Expand initials-only authors using spellings found on other papers.
-    name_index = build_name_index(
-        [p.get("bib", {}).get("author", "") for p in filled]
-    )
+    author_strings = [meta.get("author", "") for _, meta in results if meta]
+    author_strings += [
+        m.group(1)
+        for old, _ in results
+        if old
+        for m in [re.search(r"^\s*author\s*=\s*\{(.*)\},?\s*$", old["text"], re.MULTILINE)]
+        if m
+    ]
+    name_index = build_name_index(author_strings)
 
     entries = []
-    for pub in filled:
-        title = pub.get("bib", {}).get("title", "Unknown")
-        year = pub.get("bib", {}).get("pub_year", "?")
-        try:
-            entry = pub_to_bibtex(pub, existing_custom, name_index)
-            entries.append(entry)
-            print(f"  [{year}] {title}")
-        except Exception as e:
-            print(f"  Warning: skipping '{title}': {e}")
+    for old, meta in results:
+        if meta:
+            key = old["key"] if old else make_key(meta)
+            entry = meta_to_bibtex(meta, key, old["custom"] if old else {}, name_index)
+        else:
+            entry = re.sub(
+                r"^(\s*author\s*=\s*\{)(.*)(\},?\s*)$",
+                lambda m: m.group(1) + format_authors(m.group(2), name_index) + m.group(3),
+                old["text"],
+                flags=re.MULTILINE,
+            )
+        entries.append(entry)
 
     content = "---\n---\n\n" + "\n\n".join(entries) + "\n"
 
     with open(BIBLIOGRAPHY_FILE, "w") as f:
         f.write(content)
 
-    print(f"\nWrote {len(entries)} entries to {BIBLIOGRAPHY_FILE}")
+    fetched = sum(1 for _, meta in results if meta)
+    print(f"\nWrote {len(entries)} entries to {BIBLIOGRAPHY_FILE} ({fetched} looked up, {failed} failed).")
 
 
 if __name__ == "__main__":

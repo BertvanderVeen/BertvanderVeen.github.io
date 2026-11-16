@@ -76,14 +76,6 @@
     Materials: https://github.com/BertvanderVeen/GLM-workshop
     Course: https://www.physalia-courses.org/courses-workshops/glm-in-r-1/
 
-- title: Model-based ordination with the gllvm R-package
-  year: 2024
-  date: 26–27 April 2024
-  host: Uppsala University
-  location: Uppsala, Sweden
-  links:
-    Materials: https://github.com/BertvanderVeen/Uppsala_2023
-
 - title: Statistical Quantification of Individual Differences (SQuID) workshop
   year: 2024
   date: March 2024
@@ -98,6 +90,14 @@
   location: online
   links:
     Materials: https://github.com/BertvanderVeen/Antwerp2023
+
+- title: Model-based ordination with the gllvm R-package
+  year: 2023
+  date: 26–27 April 2023
+  host: Uppsala University
+  location: Uppsala, Sweden
+  links:
+    Materials: https://github.com/BertvanderVeen/Uppsala_2023
 
 - title: Statistical Quantification of Individual Differences (SQuID) workshop
   year: 2022

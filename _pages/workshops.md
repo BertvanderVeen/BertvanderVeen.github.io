@@ -5,6 +5,7 @@ permalink: /workshops/
 description: Workshops and courses I have organised or taught.
 nav: true
 nav_order: 3
+hide_header: true
 ---
 
 <!-- _pages/workshops.md, entries are in _data/workshops.yml -->

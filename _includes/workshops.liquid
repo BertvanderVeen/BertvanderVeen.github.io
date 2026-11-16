@@ -1,35 +1,29 @@
-<div class="col">
-  <a href="{% if workshop.redirect %}{{ workshop.redirect }}{% else %}{{ workshop.url | relative_url }}{% endif %}">
-    <div class="card h-100 hoverable">
-      {% if workshop.img %}
-        {%
-          include figure.liquid
-          loading="eager"
-          path=workshop.img
-          sizes = "250px"
-          alt="workshop thumbnail"
-          class="card-img-top"
-        %}
-      {% endif %}
-      <div class="card-body">
-        <h2 class="card-title">{{ workshop.title }}</h2>
-        <p class="card-text">{{ workshop.description }}</p>
-        <div class="row ml-1 mr-1 p-0">
-          {% if workshop.github %}
-            <div class="github-icon">
-              <div class="icon" data-toggle="tooltip" title="Code Repository">
-                <a href="{{ workshop.github }}"><i class="fa-brands fa-github gh-icon"></i></a>
-              </div>
-              {% if workshop.github_stars %}
-                <span class="stars" data-toggle="tooltip" title="GitHub Stars">
-                  <i class="fa-solid fa-star"></i>
-                  <span id="{{ workshop.github_stars }}-stars"></span>
-                </span>
-              {% endif %}
+<div class="publications">
+  {% assign workshops_by_year = site.data.workshops | group_by: 'year' %}
+  {% for year in workshops_by_year %}
+    <h2 class="bibliography">{{ year.name }}</h2>
+    <ol class="bibliography">
+      {% for workshop in year.items %}
+        <li>
+          <div class="title">{{ workshop.title }}</div>
+          <div class="author">
+            {{ workshop.host }}
+            {%- if workshop.location %}, {{ workshop.location }}{% endif -%}
+            {%- if workshop.role %} · {{ workshop.role }}{% endif -%}
+            {%- if workshop.with %} · with {{ workshop.with }}{% endif %}
+          </div>
+          <div class="periodical">
+            <em>{{ workshop.date }}</em>
+          </div>
+          {% if workshop.links %}
+            <div class="links">
+              {% for link in workshop.links %}
+                <a href="{{ link[1] }}" class="btn btn-sm z-depth-0" role="button">{{ link[0] }}</a>
+              {% endfor %}
             </div>
           {% endif %}
-        </div>
-      </div>
-    </div>
-  </a>
+        </li>
+      {% endfor %}
+    </ol>
+  {% endfor %}
 </div>

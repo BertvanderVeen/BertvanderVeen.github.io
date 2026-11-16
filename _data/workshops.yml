@@ -1,0 +1,124 @@
+# Workshops and courses, newest first. Shown on /workshops/, grouped by year.
+# Fields: title, year, date, host, location (optional), role (optional, shown
+# when not organiser), with (optional co-organisers), links (label: url).
+
+- title: "Beyond univariate analysis: predicting species richness with model-based ordination"
+  year: 2026
+  date: September 2026
+  host: Nordic Oikos 2026
+  location: Odense, Denmark
+  links:
+    Materials: https://github.com/BertvanderVeen/Oikos2026
+
+- title: Generalized Linear Models as a unified framework for data analysis in R
+  year: 2026
+  date: 25–29 May 2026
+  host: Physalia courses
+  links:
+    Materials: https://github.com/BertvanderVeen/GLM-workshop
+    Course: https://www.physalia-courses.org/courses-workshops/glm-in-r-1/
+
+- title: Summer School in Model-based Multivariate Analysis for Community Ecologists
+  year: 2025
+  date: 20–25 July 2025
+  host: Self-organised, funded by Nordic Society Oikos
+  with: Francis K.C. Hui, Pekka Korhonen, Jenni Niku, Audun Rugstad
+  links:
+    Materials: https://github.com/BertvanderVeen/SSMA
+    Grant report: https://www.nordicsocietyoikos.org/news/grant-report-summer-school-model-based-ordination
+
+- title: "GLLVMs: Advanced multivariate analysis of ecological communities in R"
+  year: 2025
+  date: 7–10 July 2025
+  host: Physalia courses
+  links:
+    Materials: https://github.com/BertvanderVeen/GLLVM-workshop
+    Course: https://www.physalia-courses.org/courses-workshops/gllvm/
+
+- title: "GLLVMs: Advanced multivariate analysis of ecological communities in R"
+  year: 2025
+  date: 20–23 May 2025
+  host: Physalia courses
+  links:
+    Materials: https://github.com/BertvanderVeen/GLLVM-workshop
+    Course: https://www.physalia-courses.org/courses-workshops/gllvm/
+
+- title: Analysing multivariate ecological data with Generalized Linear Latent Variable Models
+  year: 2025
+  date: 9 April 2025
+  host: Norwegian Oikos 2025
+  location: Bodø, Norway
+  with: Audun Rugstad
+  links:
+    Materials: https://github.com/BertvanderVeen/Nof2025GLLVMworkshop
+
+- title: Generalized Linear Models as a unified framework for data analysis in R
+  year: 2025
+  date: 24–28 February 2025
+  host: Physalia courses
+  links:
+    Materials: https://github.com/BertvanderVeen/GLM-workshop
+    Course: https://www.physalia-courses.org/courses-workshops/glm-in-r-1/
+
+- title: "GLLVMs: Advanced multivariate analysis of ecological communities in R"
+  year: 2024
+  date: 10–13 June 2024
+  host: Physalia courses
+  links:
+    Materials: https://github.com/BertvanderVeen/GLLVM-workshop
+    Course: https://www.physalia-courses.org/courses-workshops/gllvm/
+
+- title: Generalized Linear Models as a unified framework for data analysis in R
+  year: 2024
+  date: 6–10 May 2024
+  host: Physalia courses
+  links:
+    Materials: https://github.com/BertvanderVeen/GLM-workshop
+    Course: https://www.physalia-courses.org/courses-workshops/glm-in-r-1/
+
+- title: Model-based ordination with the gllvm R-package
+  year: 2024
+  date: 26–27 April 2024
+  host: Uppsala University
+  location: Uppsala, Sweden
+  links:
+    Materials: https://github.com/BertvanderVeen/Uppsala_2023
+
+- title: Statistical Quantification of Individual Differences (SQuID) workshop
+  year: 2024
+  date: March 2024
+  host: SQuID network
+  location: Hokkaido, Japan
+  role: Lecturer
+
+- title: Demonstration of the gllvm R-package
+  year: 2023
+  date: 10 November 2023
+  host: University of Antwerp
+  location: online
+  links:
+    Materials: https://github.com/BertvanderVeen/Antwerp2023
+
+- title: Statistical Quantification of Individual Differences (SQuID) workshop
+  year: 2022
+  date: September 2022
+  host: SQuID network
+  location: Montpellier, France
+  role: Lecturer
+
+- title: Analyzing multivariate ecological data with GLLVMs
+  year: 2021
+  date: 4 August 2021
+  host: International Research School in Applied Ecology (IRSAE)
+  location: online
+  with: Jenni Niku, Sam Perrin
+  links:
+    Materials: https://github.com/BertvanderVeen/IRSAE2021GLLVMworkshop
+
+- title: Analyzing multivariate ecological data with GLLVMs
+  year: 2020
+  date: 15–16 December 2020
+  host: British Ecological Society, Festival of Ecology
+  with: Robert B. O'Hara, Jenni Niku, Sam Perrin
+  links:
+    Materials: https://github.com/BertvanderVeen/BES2020GLLVMworkshop

@@ -1,15 +1,34 @@
 #!/usr/bin/env python
 
+"""Add new publications to papers.bib from OpenAlex, using the ORCID below.
+
+Google Scholar blocks automated requests (GitHub Actions, proxy services, and
+per-publication pages behind a JavaScript check), so OpenAlex is the source.
+Existing entries are never removed or overwritten, except preprints, which are
+replaced once their published version shows up.
+"""
+
 import json
 import os
 import re
 import sys
 import urllib.parse
 import urllib.request
-import yaml
-from scholarly import scholarly
 
 BIBLIOGRAPHY_FILE = "_bibliography/papers.bib"
+ORCID = "0000-0003-2263-3880"
+
+# OpenAlex work types to add. Datasets/software are only added when they are
+# CRAN packages; this skips Zenodo releases, Figshare data and Publons reviews.
+INCLUDED_TYPES = {
+    "article", "preprint", "review", "book", "book-chapter", "dissertation",
+    "conference-abstract", "letter", "report",
+}
+
+# Works on OpenAlex that should never be added (title or DOI). Deleting an
+# entry from papers.bib is not enough, it would come back on the next run.
+EXCLUDED_WORKS = [
+]
 
 # al-folio custom fields to preserve from existing entries
 CUSTOM_FIELDS = {
@@ -19,81 +38,72 @@ CUSTOM_FIELDS = {
 }
 
 
-def load_scholar_user_id() -> str:
-    config_file = "_data/socials.yml"
-    if not os.path.exists(config_file):
-        print(f"Configuration file {config_file} not found.")
-        sys.exit(1)
-    try:
-        with open(config_file) as f:
-            config = yaml.safe_load(f)
-        scholar_user_id = config.get("scholar_userid")
-        if not scholar_user_id:
-            print("No 'scholar_userid' found in _data/socials.yml.")
-            sys.exit(1)
-        return scholar_user_id
-    except yaml.YAMLError as e:
-        print(f"Error parsing YAML: {e}")
-        sys.exit(1)
-
-
 def normalize_title(title: str) -> str:
     return re.sub(r"\W+", "", title.lower())
 
 
-def parse_existing_entries(filepath: str) -> dict:
-    """Return normalized title -> {"key", "text", "custom"} for entries in papers.bib."""
-    result = {}
+def parse_existing_entries(filepath: str) -> list:
+    """Return [{"key", "title", "doi", "year", "text", "custom"}] for entries in papers.bib."""
+    result = []
     if not os.path.exists(filepath):
         return result
 
     with open(filepath) as f:
         content = f.read()
 
+    def field(body, name):
+        m = re.search(rf"^\s*{name}\s*=\s*\{{(.*)\}},?\s*$", body, re.MULTILINE)
+        return m.group(1) if m else ""
+
     for entry_match in re.finditer(r"@\w+\{(\w+),(.*?)\n\}", content, re.DOTALL):
-        key = entry_match.group(1)
         body = entry_match.group(2)
-        title = re.search(r"^\s*title\s*=\s*\{(.*)\},?\s*$", body, re.MULTILINE)
-        if not title:
-            continue
         custom = {}
         for field_match in re.finditer(r"(\w+)\s*=\s*\{([^}]*)\}", body):
             fname = field_match.group(1).strip().lower()
             fvalue = field_match.group(2).strip()
             if fname in CUSTOM_FIELDS:
                 custom[fname] = fvalue
-        result[normalize_title(title.group(1))] = {
-            "key": key,
+        result.append({
+            "key": entry_match.group(1),
+            "title": normalize_title(field(body, "title")),
+            "doi": field(body, "doi").lower(),
+            "year": int(field(body, "year") or 0),
             "text": entry_match.group(0),
             "custom": custom,
-        }
+        })
 
     return result
 
 
-def needs_refresh(entry: dict) -> bool:
-    """Re-fetch preprints (to pick up the published version) and entries without authors."""
-    text = entry["text"].lower()
-    return "rxiv" in text or not re.search(r"^\s*author\s*=", text, re.MULTILINE)
+def is_preprint(entry: dict) -> bool:
+    return "rxiv" in entry["text"].lower()
 
 
-def setup_proxy() -> None:
-    """Route requests through ScraperAPI when SCRAPER_API_KEY is set.
+def has_authors(entry: dict) -> bool:
+    return bool(re.search(r"^\s*author\s*=", entry["text"], re.MULTILINE))
 
-    Google Scholar blocks GitHub Actions IPs, so the workflow needs a proxy;
-    local runs work without one.
-    """
-    api_key = os.environ.get("SCRAPER_API_KEY")
-    if not api_key:
-        return
-    from scholarly import ProxyGenerator
 
-    pg = ProxyGenerator()
-    if not pg.ScraperAPI(api_key):
-        print("Could not set up the ScraperAPI proxy; check SCRAPER_API_KEY.")
-        sys.exit(1)
-    scholarly.use_proxy(pg)
-    print("Using ScraperAPI proxy.")
+def fetch_works(orcid: str) -> list:
+    works, page = [], 1
+    while True:
+        url = "https://api.openalex.org/works?" + urllib.parse.urlencode(
+            {"filter": f"author.orcid:{orcid}", "per-page": 200, "page": page}
+        )
+        req = urllib.request.Request(url, headers={"User-Agent": "al-folio-publications-sync"})
+        with urllib.request.urlopen(req, timeout=60) as resp:
+            results = json.load(resp).get("results", [])
+        works += results
+        if len(results) < 200:
+            return works
+        page += 1
+
+
+def wanted(work: dict) -> bool:
+    doi = (work.get("doi") or "").lower()
+    excluded = {normalize_title(x) for x in EXCLUDED_WORKS} | {x.lower() for x in EXCLUDED_WORKS}
+    if normalize_title(work.get("title") or "") in excluded or doi.replace("https://doi.org/", "") in excluded:
+        return False
+    return work.get("type") in INCLUDED_TYPES or "cran.package" in doi
 
 
 def make_key(meta: dict) -> str:
@@ -111,7 +121,7 @@ def make_key(meta: dict) -> str:
 PARTICLES = {"van", "von", "der", "den", "de", "del", "della", "di", "da", "du", "la", "le", "ter", "ten", "af"}
 
 
-# Scholar spells the same person differently across papers; map known variants
+# The same person is spelled differently across papers; map known variants
 # (lowercased, straight apostrophes) to one canonical form.
 AUTHOR_ALIASES = {
     "bert van der veen": "Bert van der Veen",
@@ -217,32 +227,7 @@ def format_authors(authors: str, name_index: dict = None) -> str:
     return " and ".join(out)
 
 
-def lookup_openalex(title: str) -> dict:
-    """Find a work by exact (normalized) title on OpenAlex, preferring the published version.
-
-    Google Scholar's per-publication pages sit behind a JavaScript check that
-    scholarly cannot pass, so details come from OpenAlex instead.
-    """
-    url = "https://api.openalex.org/works?" + urllib.parse.urlencode(
-        {"search": title, "per-page": 10}
-    )
-    req = urllib.request.Request(url, headers={"User-Agent": "al-folio-scholar-sync"})
-    with urllib.request.urlopen(req, timeout=30) as resp:
-        works = json.load(resp).get("results", [])
-    matches = [
-        w
-        for w in works
-        if normalize_title(w.get("title") or "") == normalize_title(title)
-        and any(
-            "van der veen" in a["author"]["display_name"].lower()
-            for a in w.get("authorships", [])
-        )
-    ]
-    matches.sort(key=lambda w: w.get("type") == "preprint")
-    return matches[0] if matches else None
-
-
-def openalex_meta(work: dict, title: str, fallback_venue: str) -> dict:
+def openalex_meta(work: dict) -> dict:
     location = work.get("primary_location") or {}
     source = location.get("source") or {}
     biblio = work.get("biblio") or {}
@@ -250,12 +235,13 @@ def openalex_meta(work: dict, title: str, fallback_venue: str) -> dict:
     if biblio.get("first_page") == biblio.get("last_page"):
         pages = biblio.get("first_page") or ""
     doi = (work.get("doi") or "").replace("https://doi.org/", "")
-    if not source and "cran.package" in doi.lower():
-        fallback_venue = "R package"
+    venue = re.sub(r"\s*\(.*\)$", "", source.get("display_name") or "")
+    if not venue and "cran.package" in doi.lower():
+        venue = "R package"
     return {
-        "title": title,
+        "title": work.get("title"),
         "author": " and ".join(a["author"]["display_name"] for a in work.get("authorships", [])),
-        "journal": re.sub(r"\s*\(.*\)$", "", source.get("display_name") or "") or fallback_venue,
+        "journal": venue,
         "volume": biblio.get("volume"),
         "number": biblio.get("issue"),
         "pages": pages,
@@ -263,18 +249,6 @@ def openalex_meta(work: dict, title: str, fallback_venue: str) -> dict:
         "publisher": source.get("host_organization_name"),
         "doi": doi,
         "url": (location.get("landing_page_url") or work.get("doi") or "").replace("http://", "https://"),
-    }
-
-
-def scholar_meta(pub: dict, scholar_id: str) -> dict:
-    """Minimal entry from the Scholar profile list (no authors available there)."""
-    bib = pub.get("bib", {})
-    return {
-        "title": bib.get("title", ""),
-        "journal": re.sub(r",?\s*\d{4}$", "", bib.get("citation", "")).strip(),
-        "year": bib.get("pub_year", ""),
-        "url": "https://scholar.google.com/citations?view_op=view_citation&citation_for_view="
-        + pub.get("author_pub_id", f"{scholar_id}:"),
     }
 
 
@@ -305,84 +279,56 @@ def meta_to_bibtex(meta: dict, key: str, custom: dict, name_index: dict = None) 
 
 
 def main() -> None:
-    scholar_id = load_scholar_user_id()
-    print(f"Fetching publications for Google Scholar ID: {scholar_id}")
-
+    print(f"Fetching works for ORCID {ORCID} from OpenAlex")
     existing = parse_existing_entries(BIBLIOGRAPHY_FILE)
     print(f"Found {len(existing)} existing entries in {BIBLIOGRAPHY_FILE}.")
 
-    scholarly.set_timeout(15)
-    scholarly.set_retries(3)
-    setup_proxy()
-
     try:
-        author = scholarly.search_author_id(scholar_id)
-        author_data = scholarly.fill(author, sections=["basics", "publications"])
+        works = [w for w in fetch_works(ORCID) if w.get("title") and wanted(w)]
     except Exception as e:
-        print(f"Error fetching author data from Google Scholar: {e}")
-        if os.environ.get("GITHUB_ACTIONS") and not os.environ.get("SCRAPER_API_KEY"):
-            print("Google Scholar blocks GitHub Actions; add a SCRAPER_API_KEY repository secret.")
+        print(f"Error fetching works from OpenAlex: {e}")
+        sys.exit(1)
+    if not works:
+        print("OpenAlex returned no works; leaving papers.bib unchanged.")
         sys.exit(1)
 
-    publications = author_data.get("publications", [])
-    print(f"Found {len(publications)} publications on Scholar.")
+    # One work per title, preferring the published version over a preprint.
+    works.sort(key=lambda w: w.get("type") == "preprint")
+    by_title = {}
+    for work in works:
+        by_title.setdefault(normalize_title(work["title"]), work)
 
-    # Sort newest first
-    publications.sort(
-        key=lambda p: int(p.get("bib", {}).get("pub_year") or 0),
-        reverse=True,
-    )
-
-    # Only look up details for new publications and preprints; everything else
-    # is kept as it is in papers.bib. A failed lookup never replaces an entry.
-    results = []
-    failed = 0
-    for pub in publications:
-        title = pub.get("bib", {}).get("title", "Unknown")
-        old = existing.get(normalize_title(title))
-        if old and not needs_refresh(old):
-            results.append((old, None))
-            continue
-        try:
-            work = lookup_openalex(title)
-        except Exception as e:
-            failed += 1
-            print(f"  Warning: OpenAlex lookup failed for '{title}': {e}")
-            if old:
-                results.append((old, None))
-            continue
-        has_authors = old and re.search(r"^\s*author\s*=", old["text"], re.MULTILINE)
-        if work and has_authors and work.get("type") == "preprint":
-            # Still a preprint: keep the existing (possibly hand-edited) entry.
-            results.append((old, None))
-            continue
-        if work:
-            meta = openalex_meta(work, title, scholar_meta(pub, scholar_id)["journal"])
-            print(f"  [{meta['year']}] {title} (OpenAlex)")
-        elif old:
-            results.append((old, None))
-            continue
-        else:
-            meta = scholar_meta(pub, scholar_id)
-            print(f"  Warning: '{title}' not found on OpenAlex; adding it without authors.")
-        results.append((old, meta))
+    entries = {id(e): (e, None) for e in existing}
+    added = replaced = 0
+    for title, work in by_title.items():
+        doi = (work.get("doi") or "").lower().replace("https://doi.org/", "")
+        old = next((e for e in existing if e["title"] == title or (doi and e["doi"] == doi)), None)
+        if old is None:
+            entries[id(work)] = (None, openalex_meta(work))
+            added += 1
+            print(f"  Adding [{work.get('publication_year')}] {work['title']}")
+        elif (is_preprint(old) and work.get("type") != "preprint") or not has_authors(old):
+            entries[id(old)] = (old, openalex_meta(work))
+            replaced += 1
+            print(f"  Updating [{work.get('publication_year')}] {work['title']}")
 
     # Expand initials-only authors using spellings found on other papers.
-    author_strings = [meta.get("author", "") for _, meta in results if meta]
+    author_strings = [meta.get("author", "") for _, meta in entries.values() if meta]
     author_strings += [
         m.group(1)
-        for old, _ in results
+        for old, _ in entries.values()
         if old
         for m in [re.search(r"^\s*author\s*=\s*\{(.*)\},?\s*$", old["text"], re.MULTILINE)]
         if m
     ]
     name_index = build_name_index(author_strings)
 
-    entries = []
-    for old, meta in results:
+    rendered = []
+    for old, meta in entries.values():
         if meta:
             key = old["key"] if old else make_key(meta)
             entry = meta_to_bibtex(meta, key, old["custom"] if old else {}, name_index)
+            year = int(meta.get("year") or 0)
         else:
             entry = re.sub(
                 r"^(\s*author\s*=\s*\{)(.*)(\},?\s*)$",
@@ -390,15 +336,17 @@ def main() -> None:
                 old["text"],
                 flags=re.MULTILINE,
             )
-        entries.append(entry)
+            year = old["year"]
+        rendered.append((year, entry))
 
-    content = "---\n---\n\n" + "\n\n".join(entries) + "\n"
+    # Newest first; entries without a year go last.
+    rendered.sort(key=lambda x: -(x[0] or -1))
+    content = "---\n---\n\n" + "\n\n".join(e for _, e in rendered) + "\n"
 
     with open(BIBLIOGRAPHY_FILE, "w") as f:
         f.write(content)
 
-    fetched = sum(1 for _, meta in results if meta)
-    print(f"\nWrote {len(entries)} entries to {BIBLIOGRAPHY_FILE} ({fetched} looked up, {failed} failed).")
+    print(f"\nWrote {len(rendered)} entries to {BIBLIOGRAPHY_FILE} ({added} added, {replaced} updated).")
 
 
 if __name__ == "__main__":

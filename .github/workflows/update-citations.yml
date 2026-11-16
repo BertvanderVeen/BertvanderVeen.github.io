@@ -1,4 +1,4 @@
-name: Update Google Scholar
+name: Update publications
 
 on:
   schedule:
@@ -10,7 +10,7 @@ permissions:
   actions: write
 
 jobs:
-  update-scholar:
+  update-publications:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -24,20 +24,9 @@ jobs:
         with:
           python-version: "3.13"
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Sync publications from Google Scholar
-        run: python bin/update_scholar_publications.py
-        env:
-          SCRAPER_API_KEY: ${{ secrets.SCRAPER_API_KEY }}
-
-      - name: Update citation counts
-        run: python bin/update_scholar_citations.py
-        env:
-          SCRAPER_API_KEY: ${{ secrets.SCRAPER_API_KEY }}
+      # Uses only the standard library, so no dependencies to install.
+      - name: Add new publications from OpenAlex
+        run: python bin/update_publications.py
 
       - name: Configure Git
         run: |
@@ -46,9 +35,9 @@ jobs:
 
       - name: Commit and push if changed
         run: |
-          git add _bibliography/papers.bib _data/citations.yml
+          git add _bibliography/papers.bib
           if ! git diff --staged --quiet; then
-            git commit -m "Update Google Scholar publications and citations"
+            git commit -m "Update publications from OpenAlex"
             git push
             # Pushes made with GITHUB_TOKEN do not trigger other workflows, so deploy explicitly.
             gh workflow run deploy.yml --ref "${GITHUB_REF_NAME}"
